@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Terjadi Kesalahan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="min-h-[60vh] flex items-center justify-center">
+    <div class="text-center">
+        <!-- Ilustrasi -->
+        <div class="w-24 h-24 bg-red-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-red-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.008v.008H12v-.008z"/>
+            </svg>
+        </div>
+
+        <!-- Kode Error -->
+        <p class="font-display text-8xl font-bold text-slate-200 leading-none mb-2">500</p>
+
+        <!-- Pesan -->
+        <h2 class="font-display text-2xl font-bold text-slate-800 mb-2">Terjadi Kesalahan</h2>
+        <p class="text-slate-400 text-sm mb-8 max-w-sm mx-auto">
+            Server mengalami masalah saat memproses permintaan Anda. Tim kami sudah diberitahu.
+        </p>
+
+        <!-- Tombol -->
+        <div class="flex items-center justify-center gap-3">
+            <a asp-controller="Home" asp-action="Index"
+               class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors shadow-sm shadow-sky-500/20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+                </svg>
+                Kembali ke Home
+            </a>
+            <button onclick="location.reload()"
+                    class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-600 text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors border border-slate-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                </svg>
+                Coba Lagi
+            </button>
+        </div>
+    </div>
+</div>

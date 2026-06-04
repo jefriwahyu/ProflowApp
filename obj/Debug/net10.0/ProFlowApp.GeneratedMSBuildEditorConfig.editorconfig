@@ -1,0 +1,131 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFramework = net10.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.RootNamespace = ProFlowApp
+build_property.RootNamespace = ProFlowApp
+build_property.ProjectDir = G:\.NET10\ProFlowApp\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = G:\.NET10\ProFlowApp
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[G:/.NET10/ProFlowApp/Views/Account/ChangePassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDaGFuZ2VQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Account/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/AuditLog/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXVkaXRMb2dcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Barang/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFyYW5nXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Barang/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFyYW5nXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Barang/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFyYW5nXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Barang/Trash.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmFyYW5nXFRyYXNoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Home/Error404.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcnJvcjQwNC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Home/Error500.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcnJvcjUwMC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Karyawan/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2FyeWF3YW5cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Karyawan/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2FyeWF3YW5cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Karyawan/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2FyeWF3YW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Karyawan/Trash.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2FyeWF3YW5cVHJhc2guY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Laporan/Pengajuan.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFwb3JhblxQZW5nYWp1YW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Laporan/Pesanan.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFwb3JhblxQZXNhbmFuLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Pengajuan/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVuZ2FqdWFuXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Pengajuan/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVuZ2FqdWFuXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[G:/.NET10/ProFlowApp/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-4x47gjsn78

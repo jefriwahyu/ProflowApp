@@ -1,0 +1,178 @@
+@model ProflowApp.Models.User
+@{
+    ViewData["Title"] = "Edit Karyawan";
+}
+
+<div class="max-w-lg mx-auto">
+
+    <!-- Header -->
+    <div class="mb-6">
+        <a asp-action="Index" class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600 transition-colors mb-4">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+            </svg>
+            Kembali ke Daftar
+        </a>
+        <h2 class="font-display text-2xl font-bold text-slate-800">Edit Karyawan</h2>
+        <p class="text-sm text-slate-400 mt-0.5">Perbarui informasi akun untuk pegawai <span class="font-semibold text-slate-600">#@Model.UserID</span></p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+
+        <!-- Card Header -->
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3" style="background-color: #0f172a;">
+            <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                </svg>
+            </div>
+            <h5 class="text-white font-semibold text-sm">Edit Data Karyawan</h5>
+        </div>
+
+        <!-- Form Body -->
+        <div class="p-6">
+            <form asp-action="Edit" method="post" class="space-y-5"
+                  onsubmit="event.preventDefault(); confirmAction(this, 'Konfirmasi Edit Karyawan', 'Apakah Anda yakin ingin menyimpan perubahan data karyawan ini?', 'bg-amber-500 hover:bg-amber-400')">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm bg-red-50 border border-red-100 rounded-xl px-4 py-3"></div>
+
+                <input type="hidden" asp-for="UserID" />
+                <input type="hidden" asp-for="IsDeleted" />
+
+                <!-- Nama Lengkap -->
+                <div>
+                    <label asp-for="Nama" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                        Nama Lengkap <span class="text-red-400">*</span>
+                    </label>
+                    <input asp-for="Nama" required placeholder="Masukkan nama lengkap..."
+                           class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
+                    <span asp-validation-for="Nama" class="text-red-500 text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Username -->
+                <div>
+                    <label asp-for="Username" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                        Username <span class="text-red-400">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">@@</span>
+                        <input asp-for="Username" required placeholder="username"
+                               class="w-full border border-slate-200 rounded-xl pl-8 pr-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
+                    </div>
+                    <span asp-validation-for="Username" class="text-red-500 text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label asp-for="Password" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                        Password Baru
+                        <span class="text-xs font-normal text-slate-400 ml-1">(opsional)</span>
+                    </label>
+                    <input asp-for="Password" type="password" placeholder="Isi untuk ganti password..."
+                           class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
+                    <p class="text-xs text-slate-400 mt-1.5 italic">Kosongkan jika tidak ingin mengubah password.</p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-end gap-3 pt-1">
+                    <a asp-action="Index"
+                       class="text-sm font-medium text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 px-4 py-2.5 rounded-xl transition-all duration-150">
+                        Batal
+                    </a>
+                    <button type="submit"
+                            class="bg-amber-500 hover:bg-amber-400 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors duration-200 shadow-sm shadow-amber-500/20 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
+                        </svg>
+                        Simpan Perubahan
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="detailModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"></div>
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between" style="background-color: #0f172a;">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
+                        </svg>
+                    </div>
+                    <h3 id="modalTitle" class="text-white font-semibold text-sm">Konfirmasi</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="px-6 py-5">
+                <div class="bg-amber-50 border border-amber-100 rounded-xl p-4">
+                    <p id="modalContent" class="text-sm text-amber-700 leading-relaxed break-words"></p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+                <button onclick="closeModal()"
+                        class="text-sm font-medium text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 px-4 py-2 rounded-xl transition-all">
+                    Batal
+                </button>
+                <button id="confirmBtn"
+                        class="hidden px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all">
+                    Ya, Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        const modal = document.getElementById('detailModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const confirmBtn = document.getElementById('confirmBtn');
+        let currentForm = null;
+
+        function confirmAction(form, actionTitle, message, colorClass) {
+            currentForm = form;
+            modalTitle.innerText = actionTitle;
+            modalContent.innerText = message;
+            confirmBtn.className = `px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all ${colorClass}`;
+            confirmBtn.innerText = "Ya, Simpan";
+            confirmBtn.classList.remove('hidden');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        confirmBtn.onclick = function () {
+            if (currentForm) currentForm.submit();
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            currentForm = null;
+        }
+
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal.firstElementChild) closeModal();
+        });
+    </script>
+}

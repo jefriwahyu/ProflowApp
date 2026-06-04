@@ -1,0 +1,324 @@
+@model ProFlowApp.ViewModels.LaporanPOViewModel
+@{
+    ViewData["Title"] = "Laporan Pesanan";
+    var hasData = Model.Items != null && Model.Items.Any();
+    var submitted = Context.Request.Query.ContainsKey("submitted");
+    int pageSize = 10;
+    int currentPage = int.TryParse(Context.Request.Query["page"], out int p) ? p : 1;
+    var pagedItems = hasData ? (Model.Items ?? new List<ProFlowApp.ViewModels.LaporanPOItem>()).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList() : new List<ProFlowApp.ViewModels.LaporanPOItem>();
+    int totalPages = hasData ? (int)Math.Ceiling((double)(Model.Items?.Count ?? 0) / pageSize) : 1;
+    decimal totalJumlahAll = Model.Items?.Sum(x => x.Jumlah) ?? 0;
+    decimal totalHargaAll = Model.Items?.Sum(x => x.TotalHarga ?? 0) ?? 0;
+}
+
+<!-- Page Header -->
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="font-display text-2xl font-bold text-slate-800">Laporan Pesanan (PO)</h2>
+        <p class="text-sm text-slate-400 mt-0.5">Laporan data pesanan pembelian</p>
+    </div>
+    <a asp-action="Pengajuan" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
+        </svg>
+        Laporan PR
+    </a>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="mb-4 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm flex items-center gap-2">
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z"/></svg>
+        @TempData["Error"]
+    </div>
+}
+
+<!-- Filter Card -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-5">
+    <div class="px-5 py-3.5 flex items-center gap-3" style="background-color:#0f172a;">
+        <div class="w-7 h-7 bg-sky-500/20 rounded-lg flex items-center justify-center">
+            <svg style="width:14px;height:14px" class="text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"/>
+            </svg>
+        </div>
+        <h5 class="text-white font-semibold text-sm">Filter Laporan</h5>
+    </div>
+    <div class="p-5">
+        <form method="get" asp-action="Pesanan">
+            <input type="hidden" name="submitted" value="true" />
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Tanggal Dari</label>
+                    <input type="date" name="tanggalDari" value="@Model.TanggalDari?.ToString("yyyy-MM-dd")"
+                           class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Tanggal Sampai</label>
+                    <input type="date" name="tanggalSampai" value="@Model.TanggalSampai?.ToString("yyyy-MM-dd")"
+                           class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Nama Karyawan</label>
+                    <input type="text" name="namaKaryawan" value="@Model.NamaKaryawan" placeholder="Cari karyawan..."
+                           class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Tipe Grafik</label>
+                    <select name="tipeGrafik" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all">
+                        <option value="tahun" selected="@(Model.TipeGrafik == "tahun")">Per Tahun</option>
+                        <option value="bulan" selected="@(Model.TipeGrafik == "bulan")">Per Bulan</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
+                <a asp-action="Pesanan" class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 px-3.5 py-2 rounded-lg transition-all">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+                    Reset
+                </a>
+                <div class="flex items-center gap-2">
+                    @if (hasData)
+                    {
+                        <button type="button" onclick="exportLaporan('EXCELOPENXML')"
+                                class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                            Excel
+                        </button>
+                        <button type="button" onclick="exportLaporan('PDF')"
+                                class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                            PDF
+                        </button>
+                    }
+                    <button type="submit"
+                            class="inline-flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm shadow-sky-500/20">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+                        Tampilkan Laporan
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!hasData)
+{
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 py-16 flex flex-col items-center justify-center text-center">
+        <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mb-4">
+            <svg class="w-7 h-7 text-amber-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+            </svg>
+        </div>
+        <p class="text-sm font-semibold text-slate-600">Tidak ada data</p>
+        <p class="text-xs text-slate-400 mt-1">Tidak ada data pesanan untuk filter yang dipilih</p>
+    </div>
+}
+else
+{
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
+        <div class="bg-white rounded-xl border border-slate-100 shadow-sm px-5 py-4 flex items-center gap-4">
+            <div class="w-11 h-11 bg-sky-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg style="width:22px;height:22px" class="text-sky-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Total PO</p>
+                <p class="text-3xl font-bold text-slate-800 leading-tight">@Model.TotalPO</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-sky-100 shadow-sm px-5 py-4 flex items-center gap-4">
+            <div class="w-11 h-11 bg-sky-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg style="width:22px;height:22px" class="text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Total Nilai</p>
+                <p class="text-2xl font-bold text-sky-600 leading-tight">Rp @Model.GrandTotal.ToString("N0")</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-5">
+        <div class="px-5 py-3.5 flex items-center justify-between" style="background-color:#0f172a;">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 bg-sky-500/20 rounded-lg flex items-center justify-center">
+                    <svg style="width:14px;height:14px" class="text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+                    </svg>
+                </div>
+                <h5 class="text-white font-semibold text-xs">Grafik Jumlah PO @(Model.TipeGrafik == "tahun" ? "— per Bulan" : "— per Minggu")</h5>
+            </div>
+            <span class="text-slate-500 text-xs">@(Model.DataGrafik?.Count ?? 0) periode</span>
+        </div>
+        <div class="p-5" style="height:220px; position:relative;">
+            <canvas id="chartPO"></canvas>
+        </div>
+    </div>
+
+    <!-- Tabel Detail -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="px-5 py-3.5 flex items-center justify-between" style="background-color:#0f172a;">
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                    <svg style="width:14px;height:14px" class="text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                    </svg>
+                </div>
+                <h5 class="text-white font-semibold text-xs">Detail Pesanan (PO)</h5>
+            </div>
+            <span class="text-slate-400 text-xs font-medium">@Model.TotalPO data</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-slate-100" style="background-color:#f8fafc;">
+                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide w-10">No</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">No PO</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">No PR</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Tanggal PO</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Karyawan</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Barang</th>
+                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Satuan</th>
+                        <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wide">Jml</th>
+                        <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wide">Harga Satuan</th>
+                        <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wide">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in pagedItems)
+                    {
+                        <tr class="border-b border-slate-50 hover:bg-slate-50/70 transition-colors">
+                            <td class="px-4 py-3 text-xs text-slate-400 font-medium">@item.No</td>
+                            <td class="px-4 py-3 text-xs font-semibold text-slate-700">@item.NoPO</td>
+                            <td class="px-4 py-3 text-xs text-slate-500">@item.NoPR</td>
+                            <td class="px-4 py-3 text-xs text-slate-600">@item.TanggalPO.ToString("dd/MM/yyyy")</td>
+                            <td class="px-4 py-3 text-xs text-slate-700">@item.NamaKaryawan</td>
+                            <td class="px-4 py-3 text-xs text-slate-700">@item.NamaBarang</td>
+                            <td class="px-4 py-3 text-xs text-slate-500">@item.Satuan</td>
+                            <td class="px-4 py-3 text-xs text-right text-slate-700">@item.Jumlah.ToString("N0")</td>
+                            <td class="px-4 py-3 text-xs text-right text-slate-600">Rp @((item.HargaSatuan ?? 0).ToString("N0"))</td>
+                            <td class="px-4 py-3 text-xs text-right font-semibold text-slate-800">Rp @((item.TotalHarga ?? 0).ToString("N0"))</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr style="background-color:#0f172a;">
+                        <td colspan="5" class="px-4 py-3"></td>
+                        <td class="px-4 py-3 text-left text-sm font-bold text-white uppercase tracking-wide">TOTAL</td>
+                        <td class="px-4 py-3"></td>
+                        <td class="px-4 py-3 text-right text-sm font-bold text-white">@totalJumlahAll.ToString("N0")</td>
+                        <td class="px-4 py-3"></td>
+                        <td class="px-4 py-3 text-right text-sm font-bold text-white">Rp @totalHargaAll.ToString("N0")</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+            <span class="text-xs text-slate-400">
+                Halaman <span class="font-semibold text-slate-600">@currentPage</span>
+                dari <span class="font-semibold text-slate-600">@totalPages</span>
+            </span>
+            <div class="flex items-center gap-2">
+                <a href="@Url.Action("Pesanan", new { tanggalDari = Model.TanggalDari?.ToString("yyyy-MM-dd"), tanggalSampai = Model.TanggalSampai?.ToString("yyyy-MM-dd"), namaKaryawan = Model.NamaKaryawan, tipeGrafik = Model.TipeGrafik, page = currentPage - 1 })"
+                   class="@(currentPage <= 1 ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors duration-150 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                    Prev
+                </a>
+                <a href="@Url.Action("Pesanan", new { tanggalDari = Model.TanggalDari?.ToString("yyyy-MM-dd"), tanggalSampai = Model.TanggalSampai?.ToString("yyyy-MM-dd"), namaKaryawan = Model.NamaKaryawan, tipeGrafik = Model.TipeGrafik, page = currentPage + 1 })"
+                   class="@(currentPage >= totalPages ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors duration-150 flex items-center gap-1">
+                    Next
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script>
+        @if (hasData)
+        {
+            <text>
+        (function() {
+            var grafikData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DataGrafik));
+            var labels = grafikData.map(x => x.Label);
+            var values = grafikData.map(x => x.JumlahPO);
+
+            var barColor = 'rgba(14,165,233,0.8)';
+            var borderColor = '#0EA5E9';
+
+            var canvas = document.getElementById('chartPO');
+            canvas.style.height = '180px';
+
+            new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: barColor,
+                        borderColor: borderColor,
+                        borderWidth: 1.5,
+                        borderRadius: 5,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#94a3b8',
+                            bodyColor: '#f1f5f9',
+                            padding: 10,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1, font: { size: 11 }, color: '#94a3b8' },
+                            grid: { color: '#f1f5f9' },
+                            border: { dash: [3, 3] }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 }, color: '#64748b' }
+                        }
+                    }
+                }
+            });
+        })();
+            </text>
+        }
+
+        function exportLaporan(format) {
+            var params = new URLSearchParams();
+            var dari = '@(Model.TanggalDari?.ToString("yyyy-MM-dd") ?? "")';
+            var sampai = '@(Model.TanggalSampai?.ToString("yyyy-MM-dd") ?? "")';
+            var karyawan = '@(Model.NamaKaryawan ?? "")';
+            var tipeGrafik = '@Model.TipeGrafik';
+
+            if (dari) params.append('tanggalDari', dari);
+            if (sampai) params.append('tanggalSampai', sampai);
+            if (karyawan) params.append('namaKaryawan', karyawan);
+            params.append('tipeGrafik', tipeGrafik);
+            params.append('format', format);
+
+            window.open('/Laporan/ExportPO?' + params.toString(), '_blank');
+        }
+    </script>
+}

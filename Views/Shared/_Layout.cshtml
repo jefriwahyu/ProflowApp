@@ -1,0 +1,249 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("Role");
+}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ProFlowApp</title>
+    <script type="importmap"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['DM Sans', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            900: '#0a0f1e',
+                            800: '#0f172a',
+                            700: '#1e2d4a',
+                            600: '#2d4163',
+                        },
+                        accent: {
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .nav-link-item {
+            position: relative;
+            transition: color 0.2s;
+        }
+        .nav-link-item::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #38bdf8;
+            transition: width 0.25s ease;
+        }
+        .nav-link-item:hover::after { width: 100%; }
+        .nav-link-item:hover { color: #38bdf8; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0f1e; }
+        ::-webkit-scrollbar-thumb { background: #2d4163; border-radius: 3px; }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <header class="shadow-lg sticky top-0 z-50" style="background-color: #0f172a;">
+        <nav class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+
+            <!-- Brand -->
+            <a asp-controller="Home" asp-action="Index"
+               class="font-display text-xl font-bold text-white tracking-tight flex items-center">
+                <span class="text-sky-400">Pro</span><span>Flow</span>
+            </a>
+
+            <!-- Nav Links -->
+            <ul class="hidden sm:flex items-center gap-6 text-sm text-slate-300">
+                <li>
+                    <a class="nav-link-item" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                @if ( role != null )
+                {
+                    @if  (role != "Checker") {
+                    <li>
+                        <a class="nav-link-item" asp-controller="Barang" asp-action="Index">Barang</a>
+                    </li>
+                    }
+                    <li>
+                        <a class="nav-link-item" asp-controller="Pengajuan" asp-action="Index">Pengajuan</a>
+                    </li>
+                    @if (role == "Manager")
+                    {
+                        <li>
+                            <a class="nav-link-item" asp-controller="Karyawan" asp-action="Index">Karyawan</a>
+                        </li>
+                        <li>
+                            <a class="nav-link-item" asp-controller="Laporan" asp-action="Pengajuan">Laporan</a>
+                        </li>
+                        <li>
+                            <a class="nav-link-item" asp-controller="AuditLog" asp-action="Index">Monitor</a>
+                        </li>
+                    }
+                }
+            </ul>
+
+            <!-- Nav Right -->
+            <ul class="flex items-center gap-3 text-sm">
+                @if (role != null)
+                {
+                    <!-- Role Badge -->
+                    <li class="hidden sm:block">
+                        @if (role == "Manager")
+                        {
+                            <span class="bg-sky-500/10 text-sky-400 text-xs font-medium px-2.5 py-1 rounded-full border border-sky-500/30">
+                                Manager
+                            </span>
+                        } else if (role == "Checker")
+                        {
+                            <span class="bg-emerald-500/10 text-emerald-400 text-xs font-medium px-2.5 py-1 rounded-full border border-emerald-500/30">
+                                Checker
+                            </span>
+                        } else
+                        {
+                            <span class="bg-slate-500/10 text-slate-400 text-xs font-medium px-2.5 py-1 rounded-full border border-slate-500/30">
+                                Karyawan
+                            </span>
+                        }
+                    </li>
+
+                    <!-- User Dropdown -->
+                    <li class="relative">
+                        <button type="button"
+                                id="user-menu-button"
+                                onclick="toggleUserDropdown(event)"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                class="flex items-center gap-2 rounded-xl px-2 py-1.5 text-slate-300 hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition-all">
+                            <!-- Avatar -->
+                            <div class="w-7 h-7 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-xs font-bold text-sky-400">
+                                @(Context.Session.GetString("Username")?.Substring(0, 1).ToUpper())
+                            </div>
+                            <span class="text-sm font-medium hidden sm:block">
+                                @Context.Session.GetString("Username")
+                            </span>
+                            <svg class="h-3.5 w-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                            </svg>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div id="user-dropdown"
+                             class="hidden absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-xl ring-1 ring-slate-900/5 overflow-hidden"
+                             role="menu"
+                             aria-orientation="vertical"
+                             aria-labelledby="user-menu-button"
+                             tabindex="-1">
+
+                            <!-- Dropdown Header -->
+                            <div class="px-4 py-3 border-b border-white/10 flex items-center gap-3" style="background-color: #0f172a;">
+                                <div class="w-8 h-8 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-xs font-bold text-sky-400 shrink-0">
+                                    @(Context.Session.GetString("Username")?.Substring(0, 1).ToUpper())
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-xs text-slate-400">Masuk sebagai</p>
+                                    <p class="text-sm font-semibold text-white truncate mt-0.5">
+                                        @Context.Session.GetString("Username")
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Menu Items -->
+                            <div class="py-1 bg-white">
+                                <a asp-controller="Account" asp-action="ChangePassword"
+                                   class="group flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-sky-600 transition-colors"
+                                   role="menuitem">
+                                    <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/>
+                                    </svg>
+                                    Ganti Password
+                                </a>
+                            </div>
+
+                            <!-- Logout -->
+                            <div class="py-1 border-t border-slate-100 bg-white">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="w-full">
+                                    <button type="submit"
+                                            class="w-full group flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 font-medium hover:bg-red-50 transition-colors"
+                                            role="menuitem">
+                                        <svg class="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+                                        </svg>
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a asp-controller="Account" asp-action="Login"
+                           class="bg-sky-500 hover:bg-sky-400 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-200">
+                            Login
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 max-w-7xl mx-auto w-full px-6 py-8">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 bg-white mt-auto">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between text-xs text-slate-400">
+            <span>&copy; 2026 <span class="font-semibold text-slate-600">ProFlowApp</span> — E-Procurement System</span>
+            <a asp-controller="Home" asp-action="Privacy" class="hover:text-slate-600 transition-colors">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function toggleUserDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('user-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        window.addEventListener('click', function (e) {
+            const dropdown = document.getElementById('user-dropdown');
+            const button = document.getElementById('user-menu-button');
+            if (dropdown && button && !dropdown.contains(e.target) && !button.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

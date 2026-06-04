@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Dashboard ProFlow";
+}
+
+<!-- HERO SECTION -->
+<div class="relative overflow-hidden rounded-2xl mb-10" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #0c2340 100%);">
+    <!-- Decorative grid background -->
+    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(#38bdf8 1px, transparent 1px), linear-gradient(90deg, #38bdf8 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+    <!-- Decorative circle -->
+    <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-10" style="background: radial-gradient(circle, #38bdf8, transparent 70%);"></div>
+
+    <div class="relative z-10 px-10 py-16 text-center">
+        <h1 class="font-display text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+            Selamat Datang di <span class="text-sky-400">ProFlow</span>
+        </h1>
+        <p class="text-slate-300 text-lg max-w-xl mx-auto mb-8 leading-relaxed">
+            Sistem manajemen pengajuan dan persetujuan pengadaan barang yang terintegrasi dan transparan.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-3">
+            @if (Context.Session.GetString("Role") == "Manager")
+            {
+                <a asp-controller="Pengajuan" asp-action="Index"
+                   class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg shadow-amber-500/20">
+                    Review Pengajuan
+                </a>
+                <a asp-controller="Karyawan" asp-action="Index"
+                   class="border border-white/30 hover:border-white/60 text-white hover:bg-white/10 font-medium px-6 py-3 rounded-xl transition-all duration-200">
+                    Kelola Staf
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Pengajuan" asp-action="Create"
+                   class="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg shadow-sky-500/20">
+                    Buat Pengajuan Baru
+                </a>
+                <a asp-controller="Barang" asp-action="Index"
+                   class="border border-white/30 hover:border-white/60 text-white hover:bg-white/10 font-medium px-6 py-3 rounded-xl transition-all duration-200">
+                    Katalog Barang
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE CARDS -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Card 1 -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-200 group">
+        <div class="w-12 h-12 bg-sky-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-sky-100 transition-colors">
+            <svg class="w-6 h-6 text-sky-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/>
+            </svg>
+        </div>
+        <h5 class="font-semibold text-slate-800 mb-2">Katalog Terpusat</h5>
+        <p class="text-sm text-slate-500 leading-relaxed">Akses daftar barang pengadaan dengan harga estimasi yang selalu diperbarui secara real-time.</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-200 group">
+        <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
+            <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+        </div>
+        <h5 class="font-semibold text-slate-800 mb-2">Alur Persetujuan Cepat</h5>
+        <p class="text-sm text-slate-500 leading-relaxed">Pantau status PR secara real-time dari Pending hingga Approved dengan notifikasi langsung.</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all duration-200 group">
+        <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-100 transition-colors">
+            <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+            </svg>
+        </div>
+        <h5 class="font-semibold text-slate-800 mb-2">Transparan & Aman</h5>
+        <p class="text-sm text-slate-500 leading-relaxed">Setiap dokumen PO digenerate otomatis dengan otorisasi manajer yang terverifikasi.</p>
+    </div>
+
+</div>

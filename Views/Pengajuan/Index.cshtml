@@ -1,0 +1,689 @@
+@model IEnumerable<ProFlowApp.ViewModels.PengajuanIndexViewModel>
+@{
+    ViewData["Title"] = "Riwayat Pengajuan";
+    var role = Context.Session.GetString("Role");
+}
+
+<!-- Header -->
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="font-display text-2xl font-bold text-slate-800">Riwayat Pengajuan</h2>
+        <p class="text-sm text-slate-400 mt-0.5">
+            @if (role == "Manager")
+            {
+                <span>Review dan kelola semua pengajuan dari karyawan</span>
+            }
+            else if (role == "Checker")
+            {
+                <span>Daftar pengajuan yang perlu dicek</span>
+            }
+            else
+            {
+                <span>Pantau status pengajuan barang Anda</span>
+            }
+        </p>
+    </div>
+    @if (role == "Karyawan")
+    {
+        <a asp-action="Create"
+           class="bg-sky-500 hover:bg-sky-400 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors duration-200 shadow-sm shadow-sky-500/20 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+            Buat Pengajuan
+        </a>
+    }
+</div>
+
+<!-- Success/Error Message -->
+@if (TempData["Success"] != null)
+{
+    <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+        </svg>
+        @TempData["Error"]
+    </div>
+}
+
+<!-- Filter Form -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-4">
+    <div class="px-5 py-3.5 flex items-center gap-3" style="background-color:#0f172a;">
+        <div class="w-7 h-7 bg-sky-500/20 rounded-lg flex items-center justify-center">
+            <svg style="width:14px;height:14px" class="text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+            </svg>
+        </div>
+        <h5 class="text-white font-semibold text-sm">Pencarian</h5>
+    </div>
+    <div class="p-5">
+        <form method="get" asp-action="Index">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
+                <!-- Search Box — 1 input untuk NoPR, NoPO, Nama Karyawan -->
+                <div class="lg:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">
+                        Cari
+                        @if (Context.Session.GetString("Role") == "Manager")
+                        {
+                            <span class="normal-case font-normal text-slate-400">— No PR, No PO, atau Nama Karyawan</span>
+                        }
+                        else
+                        {
+                            <span class="normal-case font-normal text-slate-400">— No PR atau No PO</span>
+                        }
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                            </svg>
+                        </div>
+                        <input type="text" name="search" value="@ViewBag.FilterSearch"
+                               placeholder="@(Context.Session.GetString("Role") == "Manager" ? "Ketik No PR, No PO, atau Nama Karyawan..." : "Ketik No PR atau No PO...")"
+                               class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all"/>
+                    </div>
+                </div>
+                <!-- Tanggal Dari -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Tanggal Dari</label>
+                    <input type="date" name="tanggalDari" value="@ViewBag.FilterTanggalDari"
+                           class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all"/>
+                </div>
+                <!-- Tanggal Sampai -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Tanggal Sampai</label>
+                    <input type="date" name="tanggalSampai" value="@ViewBag.FilterTanggalSampai"
+                           class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all"/>
+                </div>
+                <!-- Status -->
+                @if (role != "Checker") {
+                                    <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Status</label>
+                    <select name="status"
+                            class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all">
+                        <option value="">Semua Status</option>
+                        <option value="0" selected="@(ViewBag.FilterStatus?.ToString() == "0")">Pending</option>
+                        <option value="1" selected="@(ViewBag.FilterStatus?.ToString() == "1")">Perlu Dicek</option>
+                        <option value="2" selected="@(ViewBag.FilterStatus?.ToString() == "2")">Sudah Dicek</option>
+                        <option value="3" selected="@(ViewBag.FilterStatus?.ToString() == "3")">Disetujui</option>
+                        <option value="4" selected="@(ViewBag.FilterStatus?.ToString() == "4")">Ditolak</option>
+                    </select>
+                </div>
+                }
+            </div>
+            <!-- Tombol -->
+            <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
+                <a asp-action="Index"
+                   class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 px-3.5 py-2 rounded-lg transition-all">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                    </svg>
+                    Reset
+                </a>
+                <button type="submit"
+                        class="inline-flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm shadow-sky-500/20">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                    </svg>
+                    Cari
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Table Card -->
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <table class="w-full text-sm">
+        <thead>
+            <tr style="background-color: #0f172a;">
+                <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">No PR</th>
+                <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">No PO</th>
+                @if (role == "Manager")
+                {
+                    <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Karyawan</th>
+                }
+                <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Nama Barang</th>
+                <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Detail</th>
+                <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Jumlah</th>
+                <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Tanggal</th>
+                @if (role != "Checker") {
+                    <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Status</th>
+                }
+                @if (role == "Manager")
+                {
+                    <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Aksi</th>
+                }
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="9" class="text-center py-16 text-slate-400">
+                        <svg class="w-10 h-10 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
+                        </svg>
+                        <p class="font-medium">
+                            @if (role == "Checker")
+                            {
+                                <span>Tidak ada pengajuan yang perlu dicek</span>
+                            }
+                            else
+                            {
+                                <span>Belum ada pengajuan</span>
+                            }
+                        </p>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors duration-100">
+                        <!-- No PR -->
+                        <td class="px-5 py-4">
+                            <span class="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded-lg whitespace-nowrap">@item.NoPR</span>
+                        </td>
+                        <!-- No PO -->
+                        <td class="px-5 py-4">
+                            @if (item.NoPO != "-" && !string.IsNullOrEmpty(item.NoPO))
+                            {
+                                <span class="font-mono text-xs text-sky-700 bg-sky-50 border border-sky-100 px-2 py-1 rounded-lg whitespace-nowrap">@item.NoPO</span>
+                            }
+                            else
+                            {
+                                <span class="text-slate-300 text-xs">—</span>
+                            }
+                        </td>
+                        <!-- Nama Karyawan (Manager only) -->
+                        @if (role == "Manager")
+                        {
+                            <td class="px-5 py-4 text-slate-700 text-xs">@item.NamaKaryawan</td>
+                        }
+                        <!-- Nama Barang -->
+                        <td class="px-5 py-4 font-medium text-slate-800">@item.NamaBarang</td>
+                        <!-- Detail (tombol buka modal chat-like) -->
+                        <td class="px-5 py-4 text-center">
+    <button type="button"
+            onclick="showDetailModal(this)"
+            data-nopr="@item.NoPR"
+            data-keterangan="@Html.Encode(item.Keterangan ?? "")"
+            data-fotobukti="@Html.Encode(item.FotoBukti ?? "")"
+            data-ketchecker="@Html.Encode(item.KetChecker ?? "")"
+            data-tglchecker="@(item.TglChecker?.ToString("dd/MM/yyyy HH:mm") ?? "")"
+            data-feedback="@Html.Encode(item.Feedback ?? "")"
+            data-tglfeedback="@(item.TglFeedback?.ToString("dd/MM/yyyy HH:mm") ?? "")"
+            data-namakaryawan="@Html.Encode(item.NamaKaryawan)"
+            data-tglpr="@item.TglPR.ToString("dd/MM/yyyy HH:mm")"
+            data-status="@(item.Status ?? 0)"
+            class="inline-flex items-center gap-1 text-xs font-medium text-sky-600 hover:text-sky-700 border border-sky-200 hover:bg-sky-50 px-2.5 py-1 rounded-lg transition-all duration-150">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        Lihat
+    </button>
+</td>
+                        <!-- Jumlah -->
+                        <td class="px-5 py-4 text-center">
+                            <span class="font-semibold text-slate-700">@item.Jumlah</span>
+                        </td>
+                        <!-- Tanggal -->
+                        <td class="px-5 py-4 text-slate-500 text-xs">@item.Tanggal.ToString("dd/MM/yyyy")</td>
+                        <!-- Status Badge -->
+                        @if (role != "Checker") {
+                                                    <td class="px-5 py-4 text-center">
+                            @switch (item.Status)
+                            {
+                                case 0:
+                                    <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>Pending
+                                    </span>
+                                    break;
+                                case 1:
+                                    <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">
+                                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>Perlu Dicek
+                                    </span>
+                                    break;
+                                case 2:
+                                    <span class="inline-flex items-center gap-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">
+                                        <span class="w-1.5 h-1.5 bg-purple-400 rounded-full"></span>Sudah Dicek
+                                    </span>
+                                    break;
+                                case 3:
+                                    <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>Disetujui
+                                    </span>
+                                    break;
+                                case 4:
+                                    <span class="inline-flex items-center gap-1 bg-red-50 text-red-600 border border-red-200 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span>Ditolak
+                                    </span>
+                                    break;
+                                default:
+                                    <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-600 border border-slate-200 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full"></span>—
+                                    </span>
+                                    break;
+                            }
+                        </td>
+                        }
+                        <!-- Aksi -->
+                        @if (role == "Manager")
+                        {
+                            <td class="px-5 py-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    @if (role == "Manager")
+                                    {
+                                        @if (item.Status == 0)
+                                        {
+                                            <!-- Manager: Assign Checker atau Tolak langsung -->
+                                            <form asp-action="AssignChecker" method="post">
+                                                <input type="hidden" name="noPR" value="@item.NoPR"/>
+                                                <button type="submit"
+                                                        class="text-xs font-semibold text-blue-600 hover:text-blue-700 border border-blue-200 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-all whitespace-nowrap">
+                                                    Perlu Dicek
+                                                </button>
+                                            </form>
+                                            <button type="button"
+                                                    onclick="showRejectModal('@item.NoPR')"
+                                                    class="text-xs font-semibold text-red-500 hover:text-red-600 border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all">
+                                                Tolak
+                                            </button>
+                                        }
+                                        else if (item.Status == 2)
+                                        {
+                                            <!-- Manager: Approve atau Tolak setelah checker cek -->
+                                            <button type="button"
+                                                    onclick="showApproveModal('@item.NoPR')"
+                                                    class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 hover:bg-emerald-50 px-3 py-1.5 rounded-lg transition-all">
+                                                Setujui
+                                            </button>
+                                            <button type="button"
+                                                    onclick="showRejectModal('@item.NoPR')"
+                                                    class="text-xs font-semibold text-red-500 hover:text-red-600 border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all">
+                                                Tolak
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-slate-300 text-xs">—</span>
+                                        }
+                                    }
+                                    else if (role == "Checker" && item.Status == 1)
+                                    {
+                                        <!-- Checker: Sudah Dicek — hanya muncul kalau foto sudah diupload -->
+                                        <form asp-action="SudahDicek" method="post">
+                                            <input type="hidden" name="noPR" value="@item.NoPR"/>
+                                            <button type="submit"
+                                                    class="text-xs font-semibold text-purple-600 hover:text-purple-700 border border-purple-200 hover:bg-purple-50 px-3 py-1.5 rounded-lg transition-all">
+                                                Sudah Dicek
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+<div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+    <span class="text-xs text-slate-400">
+        Halaman <span class="font-semibold text-slate-600">@ViewBag.CurrentPage</span>
+        dari <span class="font-semibold text-slate-600">@ViewBag.TotalPages</span>
+    </span>
+    <div class="flex items-center gap-2">
+        <a asp-action="Index"
+           asp-route-page="@(ViewBag.CurrentPage - 1)"
+           asp-route-search="@ViewBag.FilterSearch"
+           asp-route-tanggalDari="@ViewBag.FilterTanggalDari"
+           asp-route-tanggalSampai="@ViewBag.FilterTanggalSampai"
+           asp-route-status="@ViewBag.FilterStatus"
+           class="@(ViewBag.CurrentPage <= 1 ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+            </svg>
+            Prev
+        </a>
+        <a asp-action="Index"
+           asp-route-page="@(ViewBag.CurrentPage + 1)"
+           asp-route-search="@ViewBag.FilterSearch"
+           asp-route-tanggalDari="@ViewBag.FilterTanggalDari"
+           asp-route-tanggalSampai="@ViewBag.FilterTanggalSampai"
+           asp-route-status="@ViewBag.FilterStatus"
+           class="@(ViewBag.CurrentPage >= ViewBag.TotalPages ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+            Next
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+            </svg>
+        </a>
+    </div>
+</div>
+</div>
+
+<!-- ==================== MODAL DETAIL (Chat-like) ==================== -->
+<div id="detailModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeModal('detailModal')"></div>
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between" style="background-color: #0f172a;">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-sky-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-white font-semibold text-sm">Detail Keterangan</h3>
+                </div>
+                <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Chat container -->
+            <div class="px-6 py-5 space-y-4 max-h-96 overflow-y-auto" id="chatContainer">
+                <!-- Diisi oleh JS -->
+            </div>
+
+            <!-- Form Upload Bukti (Checker only, status = 1) -->
+            <div id="formBuktiWrapper" class="hidden px-6 pb-4">
+                <div class="border-t border-slate-100 pt-4">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Upload Bukti</p>
+                    <form asp-action="KirimBukti" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="noPRBukti" name="noPR"/>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">
+                                    Foto Bukti <span class="text-red-500">*</span>
+                                </label>
+                                <input type="file" name="fotoBukti" accept=".jpg,.jpeg,.png" required
+                                       class="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-sky-400"/>
+                                <p class="text-xs text-slate-400 mt-1">Format: JPG, PNG. Maks: 5MB</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">
+                                    Keterangan <span class="text-red-500">*</span>
+                                </label>
+                                <textarea name="ketChecker" rows="3" required
+                                          placeholder="Tuliskan hasil pengecekan..."
+                                          class="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-sky-400 resize-none"></textarea>
+                            </div>
+                            <button type="submit"
+                                    class="w-full bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold py-2.5 rounded-lg transition-colors">
+                                Kirim Bukti
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Form Feedback Manager (Manager only, status = 3 atau 4, belum ada feedback) -->
+            <div id="formFeedbackWrapper" class="hidden px-6 pb-4">
+                <div class="border-t border-slate-100 pt-4">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Berikan Feedback</p>
+                    <form id="feedbackForm" method="post">
+                        <input type="hidden" id="noPRFeedback" name="noPR"/>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">
+                                    Feedback <span class="text-red-500">*</span>
+                                </label>
+                                <textarea name="feedback" rows="3" required
+                                          placeholder="Tuliskan feedback untuk karyawan..."
+                                          class="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-sky-400 resize-none"></textarea>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="submit" formaction="/Pengajuan/Approve"
+                                        class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-semibold py-2.5 rounded-lg transition-colors">
+                                    Setujui
+                                </button>
+                                <button type="submit" formaction="/Pengajuan/Reject"
+                                        class="flex-1 bg-red-500 hover:bg-red-400 text-white text-xs font-semibold py-2.5 rounded-lg transition-colors">
+                                    Tolak
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button onclick="closeModal('detailModal')"
+                        class="text-sm font-medium text-slate-500 hover:text-slate-700 border border-slate-200 px-4 py-2 rounded-xl transition-all">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODAL APPROVE ==================== -->
+<div id="approveModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeModal('approveModal')"></div>
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between" style="background-color: #0f172a;">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-white font-semibold text-sm">Setujui Pengajuan</h3>
+                </div>
+                <button onclick="closeModal('approveModal')" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="px-6 py-5">
+                <form asp-action="Approve" method="post">
+                    <input type="hidden" id="noPRApprove" name="noPR"/>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">
+                                Feedback <span class="text-red-500">*</span>
+                            </label>
+                            <textarea name="feedback" rows="3" required
+                                      placeholder="Tuliskan feedback persetujuan..."
+                                      class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400 resize-none"></textarea>
+                        </div>
+                        <button type="submit"
+                                class="w-full bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors">
+                            Ya, Setujui
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODAL REJECT ==================== -->
+<div id="rejectModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeModal('rejectModal')"></div>
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between" style="background-color: #0f172a;">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-white font-semibold text-sm">Tolak Pengajuan</h3>
+                </div>
+                <button onclick="closeModal('rejectModal')" class="text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="px-6 py-5">
+                <form asp-action="Reject" method="post">
+                    <input type="hidden" id="noPRReject" name="noPR"/>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">
+                                Alasan Penolakan <span class="text-red-500">*</span>
+                            </label>
+                            <textarea name="feedback" rows="3" required
+                                      placeholder="Tuliskan alasan penolakan..."
+                                      class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-red-400 resize-none"></textarea>
+                        </div>
+                        <button type="submit"
+                                class="w-full bg-red-500 hover:bg-red-400 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors">
+                            Ya, Tolak
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const userRole = '@role';
+
+    // Buka modal approve — isi noPR
+    function showApproveModal(noPR) {
+        document.getElementById('noPRApprove').value = noPR;
+        document.getElementById('approveModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Buka modal reject — isi noPR
+    function showRejectModal(noPR) {
+        document.getElementById('noPRReject').value = noPR;
+        document.getElementById('rejectModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Tutup modal
+    function closeModal(id) {
+        document.getElementById(id).classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Buka modal detail — tampilkan chat-like
+    function showDetailModal(btn) {
+    const data = {
+        noPR:         btn.dataset.nopr,
+        keterangan:   btn.dataset.keterangan,
+        fotoBukti:    btn.dataset.fotobukti,
+        ketChecker:   btn.dataset.ketchecker,
+        tglChecker:   btn.dataset.tglchecker,
+        feedback:     btn.dataset.feedback,
+        tglFeedback:  btn.dataset.tglfeedback,
+        namaKaryawan: btn.dataset.namakaryawan,
+        tglPR:        btn.dataset.tglpr,
+        status:       parseInt(btn.dataset.status)
+    };
+
+    const chat = document.getElementById('chatContainer');
+    chat.innerHTML = '';
+
+    // ── Bubble 1: Karyawan ──
+    chat.innerHTML += `
+        <div>
+            <div class="flex items-center gap-2 mb-1.5">
+                <div class="w-6 h-6 bg-slate-200 rounded-full flex items-center justify-center">
+                    <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                    </svg>
+                </div>
+                <span class="text-xs font-semibold text-slate-600">${data.namaKaryawan}</span>
+                <span class="text-xs text-slate-400">${data.tglPR}</span>
+            </div>
+            <div class="bg-slate-50 border border-slate-100 rounded-xl rounded-tl-none px-4 py-3">
+                <p class="text-sm text-slate-700 leading-relaxed">
+                    ${data.keterangan || '<span class="text-slate-400 italic">Tidak ada keterangan</span>'}
+                </p>
+            </div>
+        </div>`;
+
+    // ── Bubble 2: Checker ──
+    // Karyawan dengan status ditolak tidak lihat bukti checker
+    const showChecker = data.ketChecker;
+
+    if (showChecker) {
+        chat.innerHTML += `
+            <div>
+                <div class="flex items-center gap-2 mb-1.5">
+                    <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg class="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xs font-semibold text-blue-600">Checker</span>
+                    <span class="text-xs text-slate-400">${data.tglChecker}</span>
+                </div>
+                ${data.fotoBukti ? `
+                <div class="mb-2">
+                    <img src="${data.fotoBukti}" alt="Foto Bukti"
+                         class="rounded-xl max-h-48 object-cover border border-slate-200 cursor-pointer"
+                         onclick="window.open('${data.fotoBukti}', '_blank')"/>
+                    <p class="text-xs text-slate-400 mt-1">Klik foto untuk perbesar</p>
+                </div>` : ''}
+                <div class="bg-blue-50 border border-blue-100 rounded-xl rounded-tl-none px-4 py-3">
+                    <p class="text-sm text-blue-800 leading-relaxed">${data.ketChecker}</p>
+                </div>
+            </div>`;
+    }
+
+    // ── Bubble 3: Feedback Manager ──
+    if (data.feedback) {
+        const isApproved = data.status === 3;
+        chat.innerHTML += `
+            <div>
+                <div class="flex items-center gap-2 mb-1.5">
+                    <div class="w-6 h-6 ${isApproved ? 'bg-emerald-100' : 'bg-red-100'} rounded-full flex items-center justify-center">
+                        <svg class="w-3 h-3 ${isApproved ? 'text-emerald-500' : 'text-red-500'}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            ${isApproved
+                                ? '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+                                : '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>'}
+                        </svg>
+                    </div>
+                    <span class="text-xs font-semibold ${isApproved ? 'text-emerald-600' : 'text-red-500'}">Manager</span>
+                    <span class="text-xs text-slate-400">${data.tglFeedback}</span>
+                </div>
+                <div class="${isApproved ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'} border rounded-xl rounded-tl-none px-4 py-3">
+                    <p class="text-sm ${isApproved ? 'text-emerald-800' : 'text-red-800'} leading-relaxed">${data.feedback}</p>
+                </div>
+            </div>`;
+    }
+
+    // ── Form Upload Bukti (Checker, status = 1, belum upload) ──
+    const formBukti = document.getElementById('formBuktiWrapper');
+    if (userRole === 'Checker' && data.status === 1 && !data.fotoBukti) {
+        document.getElementById('noPRBukti').value = data.noPR;
+        formBukti.classList.remove('hidden');
+    } else {
+        formBukti.classList.add('hidden');
+    }
+
+    document.getElementById('detailModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+</script>
+}
