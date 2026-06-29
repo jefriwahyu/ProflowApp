@@ -223,3 +223,4 @@ G:\.NET10\ProFlowApp\obj\Debug\net10.0\refint\ProFlowApp.dll
 G:\.NET10\ProFlowApp\obj\Debug\net10.0\ProFlowApp.pdb
 G:\.NET10\ProFlowApp\obj\Debug\net10.0\ProFlowApp.genruntimeconfig.cache
 G:\.NET10\ProFlowApp\obj\Debug\net10.0\ref\ProFlowApp.dll
+G:\.NET10\ProFlowApp\obj\Debug\net10.0\ProFlowApp.sourcelink.json

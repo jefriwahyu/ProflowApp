@@ -43,7 +43,7 @@ public class PengajuanController : BaseController
     public async Task<IActionResult> Create(Pengajuan pr)
     {
         var userID = HttpContext.Session.GetString("UserID");
-        if (userID == null) return RedirectToAction("Login", "Account");
+        if (userID != "") return RedirectToAction("Login", "Account");
 
         pr.NoPR = "PR" + DateTime.Now.ToString("yyyyMMdd-HHmmss");
         pr.UserID = userID;
