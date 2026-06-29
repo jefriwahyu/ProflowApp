@@ -32,10 +32,13 @@
             }
             else
             {
-                <a asp-controller="Pengajuan" asp-action="Create"
-                   class="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg shadow-sky-500/20">
-                    Buat Pengajuan Baru
-                </a>
+                if (Context.Session.GetString("Role") != "Checker")
+                {
+                    <a asp-controller="Pengajuan" asp-action="Create"
+                       class="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 shadow-lg shadow-sky-500/20">
+                        Buat Pengajuan Baru
+                    </a>
+                }
                 <a asp-controller="Barang" asp-action="Index"
                    class="border border-white/30 hover:border-white/60 text-white hover:bg-white/10 font-medium px-6 py-3 rounded-xl transition-all duration-200">
                     Katalog Barang
