@@ -40,6 +40,11 @@ public class Barang
     [Required(ErrorMessage = "Harga estimasi wajib diisi.")]
     [Range(1, double.MaxValue, ErrorMessage = "Harga estimasi harus lebih dari 0.")]
     public decimal? Hrg_Est { get; set; }
+
+    [Required(ErrorMessage = "Nama vendor wajib diisi.")]
+    [MinLength(3, ErrorMessage = "Nama vendor minimal 3 karakter.")]
+    public string Nm_Vendor { get; set; } = "";
+
     public bool IsDeleted { get; set; } = false;
 }
 
