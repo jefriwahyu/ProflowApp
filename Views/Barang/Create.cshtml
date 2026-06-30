@@ -10,7 +10,7 @@
         <a asp-action="Index"
            class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600 transition-colors mb-4">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
             Kembali ke Daftar Barang
         </a>
@@ -24,8 +24,10 @@
         <!-- Card Header -->
         <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3" style="background-color: #0f172a;">
             <div class="w-8 h-8 bg-sky-500/20 rounded-lg flex items-center justify-center">
-                <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/>
+                <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
                 </svg>
             </div>
             <h5 class="text-white font-semibold text-sm">Form Data Barang</h5>
@@ -36,7 +38,8 @@
             <form asp-action="Create" class="space-y-5"
                   onsubmit="event.preventDefault(); confirmAction(this, 'Konfirmasi Tambah Barang', 'Apakah Anda yakin ingin menambahkan barang baru ini ke dalam katalog?', 'bg-emerald-500 hover:bg-emerald-400')">
 
-                <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm bg-red-50 border border-red-100 rounded-xl px-4 py-3"></div>
+                <div asp-validation-summary="ModelOnly"
+                     class="text-red-500 text-sm bg-red-50 border border-red-100 rounded-xl px-4 py-3"></div>
 
                 <!-- Nama Barang -->
                 <div>
@@ -47,7 +50,15 @@
                            class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
                     <span asp-validation-for="Nm_Brg" class="text-red-500 text-xs mt-1 block"></span>
                 </div>
-
+                <!-- Vendor -->
+                <div>
+                    <label asp-for="Nm_Vendor" class="block text-sm font-medium text-slate-700 mb-1.5">
+                        Nama Vendor
+                    </label>
+                    <input asp-for="Nm_Vendor" placeholder="Contoh: PT Jaya Abadi"
+                           class="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
+                    <span asp-validation-for="Nm_Vendor" class="text-xs text-red-500 mt-1 block"></span>
+                </div>
                 <!-- Satuan + Harga (2 kolom) -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -68,7 +79,8 @@
                             Estimasi Harga <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">Rp</span>
+                            <span
+                            class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">Rp</span>
                             <input asp-for="Hrg_Est" type="number" step="0.01" required placeholder="0"
                                    class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
                         </div>
@@ -85,7 +97,8 @@
                     <button type="submit"
                             class="bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors duration-200 shadow-sm shadow-emerald-500/20 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Simpan Barang
                     </button>
@@ -102,10 +115,12 @@
         <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
 
             <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between" style="background-color: #0f172a;">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between"
+                 style="background-color: #0f172a;">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2"
+                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                   d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" />
                         </svg>
@@ -114,7 +129,8 @@
                 </div>
                 <button onclick="closeModal()" class="text-slate-400 hover:text-white transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -142,7 +158,9 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
         const modal = document.getElementById('detailModal');
         const modalTitle = document.getElementById('modalTitle');

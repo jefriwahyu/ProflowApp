@@ -20,14 +20,15 @@
             <a asp-action="Trash"
                class="bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
                 Lihat Sampah
             </a>
             <a asp-controller="Barang" asp-action="Create"
                class="bg-sky-500 hover:bg-sky-400 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-sm shadow-sky-500/20 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
                 Tambah Barang Baru
             </a>
@@ -38,9 +39,11 @@
 <!-- Success/Error Message -->
 @if (TempData["Success"] != null)
 {
-    <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-3 rounded-xl mb-4">
+    <div
+        class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-3 rounded-xl mb-4">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         @TempData["Success"]
     </div>
@@ -49,7 +52,8 @@
 {
     <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">
         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
         </svg>
         @TempData["Error"]
     </div>
@@ -59,8 +63,10 @@
 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-4">
     <div class="px-5 py-3.5 flex items-center gap-3" style="background-color:#0f172a;">
         <div class="w-7 h-7 bg-sky-500/20 rounded-lg flex items-center justify-center">
-            <svg style="width:14px;height:14px" class="text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+            <svg style="width:14px;height:14px" class="text-sky-400" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
         </div>
         <h5 class="text-white font-semibold text-sm">Pencarian</h5>
@@ -75,27 +81,31 @@
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2"
+                                 viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                             </svg>
                         </div>
                         <input type="text" name="search" value="@ViewBag.FilterSearch"
                                placeholder="Ketik nama barang..."
-                               class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all"/>
+                               class="w-full border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all" />
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
                     <a asp-action="Index"
                        class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 px-3.5 py-2 rounded-lg transition-all">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                         </svg>
                         Reset
                     </a>
                     <button type="submit"
                             class="inline-flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm shadow-sky-500/20">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>
                         Cari
                     </button>
@@ -111,178 +121,195 @@
         <thead>
             <tr style="background-color: #0f172a;">
                 <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">ID</th>
-                <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Nama Barang</th>
-                <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Satuan</th>
-                <th class="text-right text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Estimasi Harga</th>
-                @if (role == "Manager")
-                {
-                    <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Aksi</th>
-                }
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-50">
-            @if (!Model.Any())
-            {
-                <tr>
-                    <td colspan="5" class="text-center py-16 text-slate-400">
-                        <svg class="w-10 h-10 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/>
-                        </svg>
-                        @if (!string.IsNullOrEmpty(ViewBag.FilterSearch as string))
-                        {
-                            <p class="font-medium">Tidak ada hasil untuk "<span class="text-sky-500">@ViewBag.FilterSearch</span>"</p>
-                            <p class="text-xs mt-1">Coba kata kunci yang berbeda</p>
-                        }
-                        else
-                        {
-                            <p class="font-medium">Belum ada data barang</p>
-                        }
-                    </td>
-                </tr>
-            }
-            else
-            {
-                @foreach (var item in Model)
-                {
-                    <tr class="hover:bg-slate-50 transition-colors duration-100">
-                        <td class="px-6 py-4">
-                            <span class="font-mono text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-lg">#@item.Brg_ID</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="font-medium text-slate-800">@item.Nm_Brg</span>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="bg-slate-100 text-slate-600 text-xs font-medium px-2.5 py-1 rounded-full">@item.Satuan</span>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <span class="font-semibold text-slate-800">Rp @((item.Hrg_Est ?? 0).ToString("N0"))</span>
-                        </td>
+                <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Nama
+                    Barang</th>
+                    <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Vendor
+                    </th>
+                    <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Satuan
+                    </th>
+                    <th class="text-right text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Estimasi
+                        Harga</th>
                         @if (role == "Manager")
                         {
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-center gap-2">
-                                    <a asp-action="Edit" asp-route-id="@item.Brg_ID"
-                                       class="text-xs font-medium text-amber-600 hover:text-amber-700 border border-amber-200 hover:border-amber-300 hover:bg-amber-50 px-3 py-1.5 rounded-lg transition-all">
-                                        Edit
-                                    </a>
-                                    <form asp-action="Delete" asp-route-id="@item.Brg_ID" method="post"
-                                          onsubmit="event.preventDefault(); confirmAction(this, 'Hapus Barang', 'Yakin ingin menonaktifkan \'@item.Nm_Brg\'?', 'bg-red-500 hover:bg-red-400')">
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit"
-                                                class="text-xs font-medium text-red-500 hover:text-red-600 border border-red-200 hover:border-red-300 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all">
-                                            Hapus
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+                            <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-6 py-4">Aksi
+                            </th>
                         }
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-16 text-slate-400">
+                                <svg class="w-10 h-10 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor"
+                                     stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
+                                </svg>
+                                @if (!string.IsNullOrEmpty(ViewBag.FilterSearch as string))
+                                {
+                                    <p class="font-medium">Tidak ada hasil untuk "<span
+                                        class="text-sky-500">@ViewBag.FilterSearch</span>"</p>
+                                        <p class="text-xs mt-1">Coba kata kunci yang berbeda</p>
+                                    }
+                        else
+                                    {
+                                        <p class="font-medium">Belum ada data barang</p>
+                                    }
+                                </td>
+                            </tr>
+                        }
+            else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr class="hover:bg-slate-50 transition-colors duration-100">
+                                    <td class="px-6 py-4">
+                                        <span
+                                        class="font-mono text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-lg">#@item.Brg_ID</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="font-medium text-slate-800">@item.Nm_Brg</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-xs text-slate-600">@item.Nm_Vendor</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span
+                                        class="bg-slate-100 text-slate-600 text-xs font-medium px-2.5 py-1 rounded-full">@item.Satuan</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <span class="font-semibold text-slate-800">Rp @((item.Hrg_Est ?? 0).ToString("N0"))</span>
+                                    </td>
+                                    @if (role == "Manager")
+                                    {
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <a asp-action="Edit" asp-route-id="@item.Brg_ID"
+                                                   class="text-xs font-medium text-amber-600 hover:text-amber-700 border border-amber-200 hover:border-amber-300 hover:bg-amber-50 px-3 py-1.5 rounded-lg transition-all">
+                                                    Edit
+                                                </a>
+                                                <form asp-action="Delete" asp-route-id="@item.Brg_ID" method="post"
+                                                      onsubmit="event.preventDefault(); confirmAction(this, 'Hapus Barang', 'Yakin ingin menonaktifkan \'@item.Nm_Brg\'?', 'bg-red-500 hover:bg-red-400')">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit"
+                                                            class="text-xs font-medium text-red-500 hover:text-red-600 border border-red-200 hover:border-red-300 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all">
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
 
-    <!-- Pagination -->
-    <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-        <span class="text-xs text-slate-400">
-            Halaman <span class="font-semibold text-slate-600">@ViewBag.CurrentPage</span>
-            dari <span class="font-semibold text-slate-600">@ViewBag.TotalPages</span>
-        </span>
-        <div class="flex items-center gap-2">
-            <a asp-action="Index"
-               asp-route-page="@(ViewBag.CurrentPage - 1)"
-               asp-route-search="@ViewBag.FilterSearch"
-               class="@(ViewBag.CurrentPage <= 1 ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-                </svg>
-                Prev
-            </a>
-            <a asp-action="Index"
-               asp-route-page="@(ViewBag.CurrentPage + 1)"
-               asp-route-search="@ViewBag.FilterSearch"
-               class="@(ViewBag.CurrentPage >= ViewBag.TotalPages ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
-                Next
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                </svg>
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- Confirmation Modal -->
-<div id="detailModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"></div>
-    <div class="flex min-h-full items-center justify-center p-4">
-        <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between" style="background-color: #0f172a;">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z"/>
-                        </svg>
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <span class="text-xs text-slate-400">
+                        Halaman <span class="font-semibold text-slate-600">@ViewBag.CurrentPage</span>
+                        dari <span class="font-semibold text-slate-600">@ViewBag.TotalPages</span>
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-search="@ViewBag.FilterSearch"
+                           class="@(ViewBag.CurrentPage <= 1 ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                            </svg>
+                            Prev
+                        </a>
+                        <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-search="@ViewBag.FilterSearch"
+                           class="@(ViewBag.CurrentPage >= ViewBag.TotalPages ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                            Next
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </a>
                     </div>
-                    <h3 id="modalTitle" class="text-white font-semibold text-sm">Konfirmasi</h3>
-                </div>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-white transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="px-6 py-5">
-                <div class="flex items-start gap-3 bg-red-50 border border-red-100 rounded-xl p-4">
-                    <svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                    </svg>
-                    <p id="modalContent" class="text-sm text-red-700 leading-relaxed"></p>
                 </div>
             </div>
-            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
-                <button onclick="closeModal()"
-                        class="text-sm font-medium text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 px-4 py-2 rounded-xl transition-all">
-                    Batal
-                </button>
-                <button id="confirmBtn" class="hidden px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all">
-                    Ya, Hapus
-                </button>
+
+            <!-- Confirmation Modal -->
+            <div id="detailModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+                <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"></div>
+                <div class="flex min-h-full items-center justify-center p-4">
+                    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
+                        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between"
+                             style="background-color: #0f172a;">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2"
+                                         viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" />
+                                    </svg>
+                                </div>
+                                <h3 id="modalTitle" class="text-white font-semibold text-sm">Konfirmasi</h3>
+                            </div>
+                            <button onclick="closeModal()" class="text-slate-400 hover:text-white transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="px-6 py-5">
+                            <div class="flex items-start gap-3 bg-red-50 border border-red-100 rounded-xl p-4">
+                                <svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                <p id="modalContent" class="text-sm text-red-700 leading-relaxed"></p>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+                            <button onclick="closeModal()"
+                                    class="text-sm font-medium text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 px-4 py-2 rounded-xl transition-all">
+                                Batal
+                            </button>
+                            <button id="confirmBtn"
+                                    class="hidden px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all">
+                                Ya, Hapus
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
-@section Scripts {
-    <script>
-        const modal        = document.getElementById('detailModal');
-        const modalTitle   = document.getElementById('modalTitle');
-        const modalContent = document.getElementById('modalContent');
-        const confirmBtn   = document.getElementById('confirmBtn');
-        let currentForm    = null;
+            @section Scripts {
+                <script>
+                    const modal = document.getElementById('detailModal');
+                    const modalTitle = document.getElementById('modalTitle');
+                    const modalContent = document.getElementById('modalContent');
+                    const confirmBtn = document.getElementById('confirmBtn');
+                    let currentForm = null;
 
-        function confirmAction(form, actionTitle, message, colorClass) {
-            currentForm            = form;
-            modalTitle.innerText   = actionTitle;
-            modalContent.innerText = message;
-            confirmBtn.className   = `px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all ${colorClass}`;
-            confirmBtn.innerText   = "Ya, Hapus";
-            confirmBtn.classList.remove('hidden');
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
+                    function confirmAction(form, actionTitle, message, colorClass) {
+                        currentForm = form;
+                        modalTitle.innerText = actionTitle;
+                        modalContent.innerText = message;
+                        confirmBtn.className = `px-5 py-2 rounded-xl text-sm font-semibold text-white transition-all ${colorClass}`;
+                        confirmBtn.innerText = "Ya, Hapus";
+                        confirmBtn.classList.remove('hidden');
+                        modal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                    }
 
-        confirmBtn.onclick = function () {
-            if (currentForm) currentForm.submit();
-        }
+                    confirmBtn.onclick = function () {
+                        if (currentForm) currentForm.submit();
+                    }
 
-        function closeModal() {
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            currentForm = null;
-        }
+                    function closeModal() {
+                        modal.classList.add('hidden');
+                        document.body.style.overflow = 'auto';
+                        currentForm = null;
+                    }
 
-        modal.addEventListener('click', function (e) {
-            if (e.target === modal.firstElementChild) closeModal();
-        });
-    </script>
-}
+                    modal.addEventListener('click', function (e) {
+                        if (e.target === modal.firstElementChild) closeModal();
+                    });
+                </script>
+            }

@@ -60,7 +60,8 @@ public class BarangController : BaseController
                 entityId: barang.Brg_ID.ToString(),
                 detail: $"Barang ditambahkan: {barang.Nm_Brg} | " +
                           $"Satuan: {barang.Satuan} | " +
-                          $"Harga Est: {barang.Hrg_Est}"
+                          $"Harga Est: {barang.Hrg_Est}" +
+                          $"Vendor: {barang.Nm_Vendor}"
             );
 
             TempData["Success"] = "Barang berhasil ditambahkan.";
@@ -122,7 +123,8 @@ public class BarangController : BaseController
                 entityId: barang.Brg_ID.ToString(),
                 detail: $"Barang diedit: " +
                           $"Nama: {existingBarang?.Nm_Brg} → {barang.Nm_Brg} | " +
-                          $"Harga: {existingBarang?.Hrg_Est} → {barang.Hrg_Est}"
+                          $"Harga: {existingBarang?.Hrg_Est} → {barang.Hrg_Est}" +
+                          $"Vendor: {existingBarang?.Nm_Vendor} → {barang.Nm_Vendor}"
             );
 
             TempData["Success"] = "Barang berhasil diperbarui.";
@@ -219,7 +221,8 @@ public class BarangController : BaseController
         var query = _context.Barang
             .Where(b => b.IsDeleted)
             .Where(b => string.IsNullOrEmpty(search) ||
-                        b.Nm_Brg.Contains(search))
+                        b.Nm_Brg.Contains(search) ||
+                        b.Nm_Vendor.Contains(search))
             .OrderByDescending(b => b.Nm_Brg);
 
         int totalItems = await query.CountAsync();
