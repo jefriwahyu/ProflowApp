@@ -221,7 +221,7 @@ pageSize).Take(pageSize).ToList() : new List<ProFlowApp.ViewModels.LaporanPRItem
                                               d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                                     </svg>
                                 </div>
-                                <h5 class="text-white font-semibold text-xs">Grafik Jumlah PR @(Model.TipeGrafik == "tahun" ? "— per Bulan"      : "— per Minggu")</h5>
+                                <h5 class="text-white font-semibold text-xs">Grafik Jumlah PR @(Model.TipeGrafik == "tahun" ? "— per Bulan"          : "— per Minggu")</h5>
                             </div>
                             <span class="text-slate-500 text-xs">@(Model.DataGrafik?.Count ?? 0) periode</span>
                         </div>
@@ -247,23 +247,24 @@ pageSize).Take(pageSize).ToList() : new List<ProFlowApp.ViewModels.LaporanPRItem
                         </div>
 
                         <div class="overflow-x-auto">
-                            <table class="w-full text-sm">
+                            <table class="w-full text-xs">
                                 <thead>
                                     <tr class="border-b border-slate-100" style="background-color:#f8fafc;">
-                                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide w-10">No
+                                        <th class="px-3 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide w-10">No
                                         </th>
-                                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">No PR</th>
-                                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Tanggal
+                                        <th class="px-3 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">No PR</th>
+                                        <th class="px-3 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Tanggal
                                         </th>
-                                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Karyawan
+                                        <th class="px-3 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Karyawan
                                         </th>
-                                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Barang</th>
-                                        <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Satuan</th>
-                                        <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wide">Jml</th>
-                                        <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wide">Harga
+                                        <th class="px-3 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Barang</th>
+                                        <th class="px-3 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Vendor</th>
+                                        <th class="px-2 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wide">Satuan</th>
+                                        <th class="px-2 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wide">Jml</th>
+                                        <th class="px-3 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wide">Harga
                                             Satuan</th>
-                                            <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wide">Total</th>
-                                            <th class="px-4 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wide">Status
+                                            <th class="px-3 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wide">Total</th>
+                                            <th class="px-3 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wide">Status
                                             </th>
                                         </tr>
                                     </thead>
@@ -271,171 +272,173 @@ pageSize).Take(pageSize).ToList() : new List<ProFlowApp.ViewModels.LaporanPRItem
                                         @foreach (var item in pagedItems)
                                         {
                                             <tr class="border-b border-slate-50 hover:bg-slate-50/70 transition-colors">
-                                                <td class="px-4 py-3 text-xs text-slate-400 font-medium">@item.No</td>
-                                                <td class="px-4 py-3 text-xs font-semibold text-slate-700">@item.NoPR</td>
-                                                <td class="px-4 py-3 text-xs text-slate-600">@item.TanggalPR.ToString("dd/MM/yyyy")</td>
-                                                <td class="px-4 py-3 text-xs text-slate-700">@item.NamaKaryawan</td>
-                                                <td class="px-4 py-3 text-xs text-slate-700">@item.NamaBarang</td>
-                                                <td class="px-4 py-3 text-xs text-slate-500">@item.Satuan</td>
-                                                <td class="px-4 py-3 text-xs text-right text-slate-700">@item.Jumlah.ToString("N0")</td>
-                                                <td class="px-4 py-3 text-xs text-right text-slate-600">Rp @((item.HargaSatuan ?? 0).ToString("N0"))
-                                                </td>
-                                                <td class="px-4 py-3 text-xs text-right font-semibold text-slate-800">Rp @((item.TotalHarga ??
-                                                                            0).ToString("N0"))</td>
-                                                    <td class="px-4 py-3 text-center">
-                                                        @if (item.Status == 3)
-                                                        {
-                                                            <span
-                                                            class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Disetujui</span>
-                                                        }
-                                                        else if (item.Status == 4)
-                                                        {
-                                                            <span
-                                                            class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-red-50 text-red-600 border border-red-200">Ditolak</span>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span
-                                                            class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">Pending</span>
-                                                        }
-                                                    </td>
-                                                </tr>
+                                                <td class="px-3 py-3 text-xs text-slate-400 font-medium">@item.No</td>
+                                                <td class="px-3 py-3 text-xs font-semibold text-slate-700 whitespace-nowrap">@item.NoPR</td>
+                                                <td class="px-3 py-3 text-xs text-slate-600 whitespace-nowrap">
+                                                    @item.TanggalPR.ToString("dd/MM/yyyy")</td>
+                                                    <td class="px-3 py-3 text-xs text-slate-700 max-w-[90px] truncate">@item.NamaKaryawan</td>
+                                                    <td class="px-3 py-3 text-xs text-slate-700">@item.NamaBarang</td>
+                                                    <td class="px-3 py-3 text-xs text-slate-600">@item.NamaVendor</td>
+                                                    <td class="px-2 py-3 text-xs text-slate-500 text-center whitespace-nowrap">@item.Satuan</td>
+                                                    <td class="px-2 py-3 text-xs text-center text-slate-700 whitespace-nowrap">
+                                                        @item.Jumlah.ToString("N0")</td>
+                                                        <td class="px-3 py-3 text-xs text-right text-slate-600">Rp @((item.HargaSatuan ?? 0).ToString("N0"))
+                                                        </td>
+                                                        <td class="px-3 py-3 text-xs text-right font-semibold text-slate-800">Rp @((item.TotalHarga ??
+                                                                                                                                        0).ToString("N0"))</td>
+                                                            <td class="px-3 py-3 text-center">
+                                                                @if (item.Status == 3)
+                                                                {
+                                                                    <span
+                                                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Disetujui</span>
+                                                                }
+                                                                else if (item.Status == 4)
+                                                                {
+                                                                    <span
+                                                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-red-50 text-red-600 border border-red-200">Ditolak</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span
+                                                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">Pending</span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr style="background-color:#0f172a;">
+                                                        <td colspan="7" class="px-4 py-3 text-right text-sm font-bold text-white uppercase tracking-wide">
+                                                            TOTAL</td>
+                                                            <td class="px-2 py-3 text-center text-xs font-bold text-white">@totalJumlahAll.ToString("N0")</td>
+                                                            <td class="px-4 py-3"></td>
+                                                            <td class="px-3 py-3 text-right text-xs font-bold text-white">Rp @totalHargaAll.ToString("N0")</td>
+                                                            <td class="px-4 py-3"></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+
+                                            <!-- Pagination Footer -->
+                                            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+                                                <span class="text-xs text-slate-400">
+                                                    Halaman <span class="font-semibold text-slate-600">@currentPage</span>
+                                                    dari <span class="font-semibold text-slate-600">@totalPages</span>
+                                                </span>
+                                                <div class="flex items-center gap-2">
+                                                    <a asp-action="Pengajuan" asp-route-tanggalDari="@Model.TanggalDari?.ToString("yyyy-MM-dd")"
+                                                       asp-route-tanggalSampai="@Model.TanggalSampai?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status"
+                                                       asp-route-namaKaryawan="@Model.NamaKaryawan" asp-route-tipeGrafik="@Model.TipeGrafik"
+                                                       asp-route-submitted="true" asp-route-page="@(currentPage - 1)"
+                                                       class="@(currentPage <= 1 ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors duration-150 flex items-center gap-1">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                                        </svg>
+                                                        Prev
+                                                    </a>
+                                                    <a asp-action="Pengajuan" asp-route-tanggalDari="@Model.TanggalDari?.ToString("yyyy-MM-dd")"
+                                                       asp-route-tanggalSampai="@Model.TanggalSampai?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status"
+                                                       asp-route-namaKaryawan="@Model.NamaKaryawan" asp-route-tipeGrafik="@Model.TipeGrafik"
+                                                       asp-route-submitted="true" asp-route-page="@(currentPage + 1)"
+                                                       class="@(currentPage >= totalPages ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors duration-150 flex items-center gap-1">
+                                                        Next
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                                        </svg>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @section Scripts {
+                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+                                        <script>
+                                            @if (hasData)
+                                            {
+                                                <text>
+                                                    (function() {
+                                                    var grafikData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DataGrafik));
+                                                    var statusFilter = '@Model.Status';
+
+                                                    var labels = grafikData.map(x => x.Label);
+                                                    var values = grafikData.map(x => {
+                                                    if (statusFilter === '0') return x.JumlahPending;
+                                                    if (statusFilter === '3') return x.JumlahDisetujui;
+                                                    if (statusFilter === '4') return x.JumlahDitolak;
+                                                    return x.JumlahPR;
+                                                    });
+
+                                                    var barColor = statusFilter === '0' ? 'rgba(217,119,6,0.8)' :
+                                                    statusFilter === '3' ? 'rgba(22,163,74,0.8)' :
+                                                    statusFilter === '4' ? 'rgba(220,38,38,0.8)' : 'rgba(14,165,233,0.8)';
+                                                    var borderColor = statusFilter === '0' ? '#D97706' :
+                                                    statusFilter === '3' ? '#16A34A' :
+                                                    statusFilter === '4' ? '#DC2626' : '#0EA5E9';
+
+                                                    var canvas = document.getElementById('chartPR');
+                                                    canvas.style.height = '180px';
+
+                                                    new Chart(canvas.getContext('2d'), {
+                                                    type: 'bar',
+                                                    data: {
+                                                    labels: labels,
+                                                    datasets: [{
+                                                    data: values,
+                                                    backgroundColor: barColor,
+                                                    borderColor: borderColor,
+                                                    borderWidth: 1.5,
+                                                    borderRadius: 5,
+                                                    borderSkipped: false
+                                                    }]
+                                                    },
+                                                    options: {
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    plugins: {
+                                                    legend: {display: false },
+                                                    tooltip: {
+                                                    backgroundColor: '#0f172a',
+                                                    titleColor: '#94a3b8',
+                                                    bodyColor: '#f1f5f9',
+                                                    padding: 10,
+                                                    cornerRadius: 8
+                                                    }
+                                                    },
+                                                    scales: {
+                                                    y: {
+                                                    beginAtZero: true,
+                                                    ticks: {stepSize: 1, font: {size: 11 }, color: '#94a3b8' },
+                                                    grid: {color: '#f1f5f9' },
+                                                    border: {dash: [3, 3] }
+                                                    },
+                                                    x: {
+                                                    grid: {display: false },
+                                                    ticks: {font: {size: 11 }, color: '#64748b' }
+                                                    }
+                                                    }
+                                                    }
+                                                    });
+                                                    })();
+                                                </text>
                                             }
-                                        </tbody>
-                                        <tfoot>
-                                            <tr style="background-color:#0f172a;">
-                                                <td colspan="4" class="px-4 py-3"></td>
-                                                <td class="px-4 py-3 text-left text-sm font-bold text-white uppercase tracking-wide">TOTAL</td>
-                                                <td class="px-4 py-3"></td>
-                                                <td class="px-4 py-3 text-right text-sm font-bold text-white">@totalJumlahAll.ToString("N0")</td>
-                                                <td class="px-4 py-3"></td>
-                                                <td class="px-4 py-3 text-right text-sm font-bold text-white">Rp @totalHargaAll.ToString("N0")</td>
-                                                <td class="px-4 py-3"></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
 
-                                <!-- Pagination Footer -->
-                                <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-                                    <span class="text-xs text-slate-400">
-                                        Halaman <span class="font-semibold text-slate-600">@currentPage</span>
-                                        dari <span class="font-semibold text-slate-600">@totalPages</span>
-                                    </span>
-                                    <div class="flex items-center gap-2">
-                                        <a asp-action="Pengajuan" asp-route-tanggalDari="@Model.TanggalDari?.ToString("yyyy-MM-dd")"
-                                           asp-route-tanggalSampai="@Model.TanggalSampai?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status"
-                                           asp-route-namaKaryawan="@Model.NamaKaryawan" asp-route-tipeGrafik="@Model.TipeGrafik"
-                                           asp-route-submitted="true" asp-route-page="@(currentPage - 1)"
-                                           class="@(currentPage <= 1 ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors duration-150 flex items-center gap-1">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                                            </svg>
-                                            Prev
-                                        </a>
-                                        <a asp-action="Pengajuan" asp-route-tanggalDari="@Model.TanggalDari?.ToString("yyyy-MM-dd")"
-                                           asp-route-tanggalSampai="@Model.TanggalSampai?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status"
-                                           asp-route-namaKaryawan="@Model.NamaKaryawan" asp-route-tipeGrafik="@Model.TipeGrafik"
-                                           asp-route-submitted="true" asp-route-page="@(currentPage + 1)"
-                                           class="@(currentPage >= totalPages ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors duration-150 flex items-center gap-1">
-                                            Next
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        }
+                                            function exportLaporan(format) {
+                                            var params = new URLSearchParams();
+                                            var dari = '@(Model.TanggalDari?.ToString("yyyy-MM-dd") ?? "")';
+                                            var sampai = '@(Model.TanggalSampai?.ToString("yyyy-MM-dd") ?? "")';
+                                            var status = '@(Model.Status?.ToString() ?? "")';
+                                            var karyawan = '@(Model.NamaKaryawan ?? "")';
+                                            var tipeGrafik = '@Model.TipeGrafik';
 
-                        @section Scripts {
-                            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-                            <script>
-                                @if (hasData)
-                                {
-                                    <text>
-                                        (function() {
-                                        var grafikData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DataGrafik));
-                                        var statusFilter = '@Model.Status';
+                                            if (dari) params.append('tanggalDari', dari);
+                                            if (sampai) params.append('tanggalSampai', sampai);
+                                            if (status) params.append('status', status);
+                                            if (karyawan) params.append('namaKaryawan', karyawan);
+                                            params.append('tipeGrafik', tipeGrafik);
+                                            params.append('format', format);
 
-                                        var labels = grafikData.map(x => x.Label);
-                                        var values = grafikData.map(x => {
-                                        if (statusFilter === '0') return x.JumlahPending;
-                                        if (statusFilter === '3') return x.JumlahDisetujui;
-                                        if (statusFilter === '4') return x.JumlahDitolak;
-                                        return x.JumlahPR;
-                                        });
-
-                                        var barColor = statusFilter === '0' ? 'rgba(217,119,6,0.8)' :
-                                        statusFilter === '3' ? 'rgba(22,163,74,0.8)' :
-                                        statusFilter === '4' ? 'rgba(220,38,38,0.8)' : 'rgba(14,165,233,0.8)';
-                                        var borderColor = statusFilter === '0' ? '#D97706' :
-                                        statusFilter === '3' ? '#16A34A' :
-                                        statusFilter === '4' ? '#DC2626' : '#0EA5E9';
-
-                                        var canvas = document.getElementById('chartPR');
-                                        canvas.style.height = '180px';
-
-                                        new Chart(canvas.getContext('2d'), {
-                                        type: 'bar',
-                                        data: {
-                                        labels: labels,
-                                        datasets: [{
-                                        data: values,
-                                        backgroundColor: barColor,
-                                        borderColor: borderColor,
-                                        borderWidth: 1.5,
-                                        borderRadius: 5,
-                                        borderSkipped: false
-                                        }]
-                                        },
-                                        options: {
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                        plugins: {
-                                        legend: {display: false },
-                                        tooltip: {
-                                        backgroundColor: '#0f172a',
-                                        titleColor: '#94a3b8',
-                                        bodyColor: '#f1f5f9',
-                                        padding: 10,
-                                        cornerRadius: 8
-                                        }
-                                        },
-                                        scales: {
-                                        y: {
-                                        beginAtZero: true,
-                                        ticks: {stepSize: 1, font: {size: 11 }, color: '#94a3b8' },
-                                        grid: {color: '#f1f5f9' },
-                                        border: {dash: [3, 3] }
-                                        },
-                                        x: {
-                                        grid: {display: false },
-                                        ticks: {font: {size: 11 }, color: '#64748b' }
-                                        }
-                                        }
-                                        }
-                                        });
-                                        })();
-                                    </text>
-                                }
-
-                                function exportLaporan(format) {
-                                var params = new URLSearchParams();
-                                var dari = '@(Model.TanggalDari?.ToString("yyyy-MM-dd") ?? "")';
-                                var sampai = '@(Model.TanggalSampai?.ToString("yyyy-MM-dd") ?? "")';
-                                var status = '@(Model.Status?.ToString() ?? "")';
-                                var karyawan = '@(Model.NamaKaryawan ?? "")';
-                                var tipeGrafik = '@Model.TipeGrafik';
-
-                                if (dari) params.append('tanggalDari', dari);
-                                if (sampai) params.append('tanggalSampai', sampai);
-                                if (status) params.append('status', status);
-                                if (karyawan) params.append('namaKaryawan', karyawan);
-                                params.append('tipeGrafik', tipeGrafik);
-                                params.append('format', format);
-
-                                window.open('/Laporan/ExportPR?' + params.toString(), '_blank');
-                                }
-                            </script>
-                        }
+                                            window.open('/Laporan/ExportPR?' + params.toString(), '_blank');
+                                            }
+                                        </script>
+                                    }

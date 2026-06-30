@@ -63,7 +63,7 @@ namespace ProFlowApp.Controllers
             return new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(60) };
         }
 
-        // Method validasi terpusat — KISS
+        // Method validasi terpusat
         // Semua validasi parameter SSRS ada di sini
         // Return null kalau valid, return pesan error kalau tidak valid
         private string? ValidateSsrsParams(
@@ -103,8 +103,7 @@ namespace ProFlowApp.Controllers
             return null; // null = semua valid
         }
 
-        // ==================== LAPORAN PR ====================
-
+        // LAPORAN PR
         [HttpGet("Pengajuan")]
         public async Task<IActionResult> Pengajuan(
             DateTime? tanggalDari,
@@ -147,6 +146,7 @@ namespace ProFlowApp.Controllers
                 TanggalPR = x.p.Tgl_Req,
                 NamaKaryawan = x.u.Nama,
                 NamaBarang = x.b.Nm_Brg,
+                NamaVendor = x.b.Nm_Vendor,
                 Satuan = x.b.Satuan,
                 Jumlah = x.p.Jml,
                 HargaSatuan = x.b.Hrg_Est,
@@ -280,7 +280,7 @@ namespace ProFlowApp.Controllers
             }
         }
 
-        // ==================== LAPORAN PO ====================
+        // LAPORAN PO
 
         [HttpGet("Pesanan")]
         public async Task<IActionResult> Pesanan(
@@ -323,6 +323,7 @@ namespace ProFlowApp.Controllers
                 TanggalPO = x.po.tgl_PO,
                 NamaKaryawan = x.u.Nama,
                 NamaBarang = x.b.Nm_Brg,
+                NamaVendor = x.b.Nm_Vendor,
                 Satuan = x.b.Satuan,
                 Jumlah = x.pr.Jml,
                 HargaSatuan = x.b.Hrg_Est,

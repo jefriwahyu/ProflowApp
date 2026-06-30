@@ -31,6 +31,7 @@ namespace ProFlowApp.ViewModels
         public DateTime TanggalPR { get; set; }
         public string? NamaKaryawan { get; set; } = string.Empty;
         public string? NamaBarang { get; set; } = string.Empty;
+        public string NamaVendor { get; set; } = "";
         public string? Satuan { get; set; } = string.Empty;
         public int Jumlah { get; set; }
         public decimal? HargaSatuan { get; set; }

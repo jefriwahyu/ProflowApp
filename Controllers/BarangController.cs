@@ -60,7 +60,7 @@ public class BarangController : BaseController
                 entityId: barang.Brg_ID.ToString(),
                 detail: $"Barang ditambahkan: {barang.Nm_Brg} | " +
                           $"Satuan: {barang.Satuan} | " +
-                          $"Harga Est: {barang.Hrg_Est}" +
+                          $"Harga Est: {barang.Hrg_Est} | " +
                           $"Vendor: {barang.Nm_Vendor}"
             );
 
@@ -123,7 +123,7 @@ public class BarangController : BaseController
                 entityId: barang.Brg_ID.ToString(),
                 detail: $"Barang diedit: " +
                           $"Nama: {existingBarang?.Nm_Brg} → {barang.Nm_Brg} | " +
-                          $"Harga: {existingBarang?.Hrg_Est} → {barang.Hrg_Est}" +
+                          $"Harga: {existingBarang?.Hrg_Est} → {barang.Hrg_Est} | " +
                           $"Vendor: {existingBarang?.Nm_Vendor} → {barang.Nm_Vendor}"
             );
 
