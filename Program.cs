@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using ProflowApp.Data;
 using System.Threading.RateLimiting;
+using ProFlowApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ================================================================
 // SERVICES
 // ================================================================
+
+builder.Services.AddHttpClient<ClassifierClient>();
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -35,7 +37,6 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
-
 builder.Services.AddMemoryCache();
 
 // Audit Service

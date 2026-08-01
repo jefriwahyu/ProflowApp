@@ -38,4 +38,6 @@ public class PengajuanIndexViewModel
     // Nama karyawan pembuat PR — untuk ditampilkan di modal
     public string NamaKaryawan { get; set; } = "";
     public DateTime TglPR { get; set; }
+    public string? UrgencyLevel { get; set; }
+
 }

@@ -76,6 +76,7 @@ public class Pengajuan
     public string? Feedback { get; set; }
     public DateTime? TglChecker { get; set; }
     public DateTime? TglFeedback { get; set; }
+    public string? UrgencyLevel { get; set; }
     
 }
 

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "tR+6Fj2fJ7s=",
+  "dgSpecHash": "A4LZ5n+829M=",
   "success": true,
   "projectFilePath": "G:\\.NET10\\ProFlowApp\\ProFlowApp.csproj",
   "expectedPackageFiles": [
@@ -52,5 +52,15 @@
     "C:\\Users\\Jepaygon\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "C:\\Users\\Jepaygon\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.4\\system.security.cryptography.protecteddata.9.0.4.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "projectPath": "G:\\.NET10\\ProFlowApp\\ProFlowApp.csproj",
+      "warningLevel": 1,
+      "filePath": "G:\\.NET10\\ProFlowApp\\ProFlowApp.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

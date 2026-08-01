@@ -14,17 +14,20 @@ public class PengajuanController : BaseController
     private readonly ApplicationDbContext _context;
     private readonly AuditService _auditService;
     private readonly IWebHostEnvironment _env;
+    private readonly ClassifierClient _classifierClient;
 
     // IWebHostEnvironment — untuk mendapatkan path wwwroot
     // agar bisa simpan foto ke folder uploads/bukti
     public PengajuanController(
         ApplicationDbContext context,
         AuditService auditService,
-        IWebHostEnvironment env)
+        IWebHostEnvironment env,
+        ClassifierClient classifierClient)
     {
         _context = context;
         _auditService = auditService;
         _env = env;
+        _classifierClient = classifierClient;
     }
 
     // ==================== CREATE ====================
@@ -56,6 +59,15 @@ public class PengajuanController : BaseController
         if (ModelState.IsValid)
         {
             var barang = await _context.Barang.FindAsync(pr.Brg_ID);
+
+            try
+            {
+                pr.UrgencyLevel = await _classifierClient.ClassifyAsync(pr.Keterangan ?? "");
+            }
+            catch (Exception ex)
+            {
+                pr.UrgencyLevel = "Medium";
+            }
 
             _context.Pengajuan.Add(pr);
             await _context.SaveChangesAsync();
@@ -348,7 +360,8 @@ public class PengajuanController : BaseController
                         KetChecker = pr.KetChecker,
                         TglChecker = pr.TglChecker,
                         Feedback = pr.Feedback,
-                        TglFeedback = pr.TglFeedback
+                        TglFeedback = pr.TglFeedback,
+                        UrgencyLevel = pr.UrgencyLevel
                     };
 
         var totalData = await query.CountAsync();
@@ -357,11 +370,20 @@ public class PengajuanController : BaseController
         // Pastikan page tidak melebihi totalPages
         if (page > totalPages && totalPages > 0) page = totalPages;
 
-        var dataPaginated = await query
-            .OrderByDescending(x => x.Tanggal)
+
+        var urgencyOrder = new Dictionary<string, int> { ["High"] = 1, ["Medium"] = 2, ["Low"] = 3 };
+
+        var dataPaginated = (await query.ToListAsync())
+            .OrderBy(x => urgencyOrder.GetValueOrDefault(x.UrgencyLevel ?? "", 4))
+            .ThenByDescending(x => x.Tanggal)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToList();
+        // var dataPaginated = await query
+        //     .OrderByDescending(x => x.Tanggal)
+        //     .Skip((page - 1) * pageSize)
+        //     .Take(pageSize)
+        //     .ToListAsync();
 
         ViewBag.CurrentPage = page;
         ViewBag.TotalPages = totalPages;
