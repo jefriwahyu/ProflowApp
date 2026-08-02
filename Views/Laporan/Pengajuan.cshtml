@@ -282,9 +282,9 @@ pageSize).Take(pageSize).ToList() : new List<ProFlowApp.ViewModels.LaporanPRItem
                                                     <td class="px-2 py-3 text-xs text-slate-500 text-center whitespace-nowrap">@item.Satuan</td>
                                                     <td class="px-2 py-3 text-xs text-center text-slate-700 whitespace-nowrap">
                                                         @item.Jumlah.ToString("N0")</td>
-                                                        <td class="px-3 py-3 text-xs text-right text-slate-600">Rp @((item.HargaSatuan ?? 0).ToString("N0"))
+                                                        <td class="px-3 py-3 text-xs text-right text-slate-600">$ @((item.HargaSatuan ?? 0).ToString("N0"))
                                                         </td>
-                                                        <td class="px-3 py-3 text-xs text-right font-semibold text-slate-800">Rp @((item.TotalHarga ??
+                                                        <td class="px-3 py-3 text-xs text-right font-semibold text-slate-800">$ @((item.TotalHarga ??
                                                                                                                                         0).ToString("N0"))</td>
                                                             <td class="px-3 py-3 text-center">
                                                                 @if (item.Status == 3)
@@ -312,7 +312,7 @@ pageSize).Take(pageSize).ToList() : new List<ProFlowApp.ViewModels.LaporanPRItem
                                                             TOTAL</td>
                                                             <td class="px-2 py-3 text-center text-xs font-bold text-white">@totalJumlahAll.ToString("N0")</td>
                                                             <td class="px-4 py-3"></td>
-                                                            <td class="px-3 py-3 text-right text-xs font-bold text-white">Rp @totalHargaAll.ToString("N0")</td>
+                                                            <td class="px-3 py-3 text-right text-xs font-bold text-white">$ @totalHargaAll.ToString("N0")</td>
                                                             <td class="px-4 py-3"></td>
                                                         </tr>
                                                     </tfoot>
