@@ -371,7 +371,7 @@ public class PengajuanController : BaseController
         // Pastikan page selalu minimal 1 — mencegah OFFSET negatif
         if (page < 1) page = 1;
 
-        int pageSize = 5;
+        int pageSize = 10;
         var role = HttpContext.Session.GetString("Role");
         var userID = HttpContext.Session.GetString("UserID");
 
@@ -433,11 +433,6 @@ public class PengajuanController : BaseController
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToList();
-        // var dataPaginated = await query
-        //     .OrderByDescending(x => x.Tanggal)
-        //     .Skip((page - 1) * pageSize)
-        //     .Take(pageSize)
-        //     .ToListAsync();
 
         ViewBag.CurrentPage = page;
         ViewBag.TotalPages = totalPages;
