@@ -36,6 +36,7 @@ namespace ProFlowApp.ViewModels
         public int Jumlah { get; set; }
         public decimal? HargaSatuan { get; set; }
         public decimal? TotalHarga { get; set; }
+        public string? DecisionType { get; set; } 
         public int? Status { get; set; }
         public string StatusLabel => !Status.HasValue ? "Belum Ditentukan" : Status.Value == 0 ? "Pending" : Status.Value == 1 ? "Disetujui" : "Ditolak";
     }

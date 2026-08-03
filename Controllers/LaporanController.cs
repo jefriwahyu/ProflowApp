@@ -150,7 +150,8 @@ namespace ProFlowApp.Controllers
                 Satuan = x.b.Satuan,
                 Jumlah = x.p.Jml,
                 HargaSatuan = x.b.Hrg_Est,
-                TotalHarga = x.p.Jml * x.b.Hrg_Est,
+                TotalHarga = x.p.DecisionType == "SERVICE" ? x.p.HargaService : (x.p.Jml * x.b.Hrg_Est),
+                DecisionType = x.p.DecisionType,
                 Status = x.p.Status
             }).ToList();
 
@@ -327,7 +328,8 @@ namespace ProFlowApp.Controllers
                 Satuan = x.b.Satuan,
                 Jumlah = x.pr.Jml,
                 HargaSatuan = x.b.Hrg_Est,
-                TotalHarga = x.pr.Jml * x.b.Hrg_Est,
+                TotalHarga = x.po.TotalHarga,
+                DecisionType = x.pr.DecisionType,
                 Status = x.po.Status
             }).ToList();
 
