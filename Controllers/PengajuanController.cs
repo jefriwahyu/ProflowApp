@@ -133,7 +133,7 @@ public class PengajuanController : BaseController
     // Manager approve PR — status 2 → 3
     // Sekaligus simpan feedback dan buat PO
     [HttpPost("Approve")]
-    public async Task<IActionResult> Approve(string noPR, string feedback)
+    public async Task<IActionResult> Approve(string noPR, string feedback, string decisionType, decimal? hargaService)
     {
         if (HttpContext.Session.GetString("Role") != "Manager")
         {
@@ -159,15 +159,31 @@ public class PengajuanController : BaseController
             return RedirectToAction("Index");
         }
 
-        pr.Status = 3; // Disetujui
-        pr.Feedback = feedback;
-        pr.TglFeedback = DateTime.Now;
+        if (pr.Rekomendasi != "SERVICE" && pr.Rekomendasi != "GANTI_BARU")
+        {
+            TempData["Error"] = "Rekomendasi checker tidak valid atau belum diisi.";
+            return RedirectToAction("Index");
+        }
+
+        if (pr.Rekomendasi == "SERVICE" && (hargaService == null || hargaService <= 0))
+        {
+            TempData["Error"] = "Harga Service wajib diisi untuk pengajuan dengan rekomendasi Service.";
+            return RedirectToAction("Index");
+        }
 
         var barang = await _context.Barang.FindAsync(pr.Brg_ID);
 
-        // Buat PO otomatis
-        // var noPO = "PO" + DateTime.Now.ToString("yyyyMMdd") + "-" + pr.PR_ID;
-        // Ambil nomor urut terakhir dari NoPO yang sudah ada, lalu tambah 1
+        pr.Status = 3; // Disetujui
+        pr.Feedback = feedback;
+        pr.TglFeedback = DateTime.Now;
+        pr.DecisionType = pr.Rekomendasi == "SERVICE" ? "SERVICE" : "PENGADAAN";
+        pr.HargaService = pr.Rekomendasi == "SERVICE" ? hargaService : null;
+
+        decimal totalHarga = pr.Rekomendasi == "SERVICE"
+            ? hargaService!.Value
+            : (barang?.Hrg_Est ?? 0) * pr.Jml;
+
+        // Buat PO otomatis 
         var lastNoPO = await _context.Pesanan
             .Where(p => p.NoPO != null && p.NoPO.StartsWith("TXN"))
             .OrderByDescending(p => p.PO_ID)
@@ -192,7 +208,8 @@ public class PengajuanController : BaseController
             PR_ID = pr.PR_ID,
             tgl_PO = DateTime.Now,
             Status = 3,
-            TotalHarga = barang?.Hrg_Est * pr.Jml
+            // TotalHarga = barang?.Hrg_Est * pr.Jml,
+            TotalHarga = totalHarga
         };
 
         _context.Pesanan.Add(pesananBaru);
@@ -263,7 +280,8 @@ public class PengajuanController : BaseController
     public async Task<IActionResult> KirimBukti(
     string noPR,
     IFormFile fotoBukti,
-    string ketChecker)
+    string ketChecker,
+    string rekomendasi)
     {
         if (HttpContext.Session.GetString("Role") != "Checker")
         {
@@ -292,6 +310,12 @@ public class PengajuanController : BaseController
             return RedirectToAction("Index");
         }
 
+        if (rekomendasi != "SERVICE" && rekomendasi != "GANTI_BARU")
+        {
+            TempData["Error"] = "Rekomendasi wajib dipilih (Service atau Ganti Baru).";
+            return RedirectToAction("Index");
+        }
+
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
         var extension = Path.GetExtension(fotoBukti.FileName).ToLower();
         if (!allowedExtensions.Contains(extension))
@@ -317,6 +341,7 @@ public class PengajuanController : BaseController
         pr.FotoBukti = $"/uploads/bukti/{fileName}";
         pr.KetChecker = ketChecker;
         pr.TglChecker = DateTime.Now;
+        pr.Rekomendasi = rekomendasi;
 
         // Langsung ubah status ke 2 (Sudah Dicek) setelah upload
         pr.Status = 2;
@@ -327,7 +352,7 @@ public class PengajuanController : BaseController
             action: "KIRIM_BUKTI",
             entity: "Pengajuan",
             entityId: pr.PR_ID.ToString(),
-            detail: $"Bukti dikirim & status diubah ke Sudah Dicek: {noPR} | File: {fileName}"
+            detail: $"Bukti dikirim & status diubah ke Sudah Dicek: {noPR} | File: {fileName} | Rekomendasi: {rekomendasi}"
         );
 
         TempData["Success"] = "Bukti berhasil dikirim. Status pengajuan diubah ke Sudah Dicek.";
@@ -389,7 +414,8 @@ public class PengajuanController : BaseController
                         TglChecker = pr.TglChecker,
                         Feedback = pr.Feedback,
                         TglFeedback = pr.TglFeedback,
-                        UrgencyLevel = pr.UrgencyLevel
+                        UrgencyLevel = pr.UrgencyLevel,
+                        Rekomendasi = pr.Rekomendasi
                     };
 
         var totalData = await query.CountAsync();

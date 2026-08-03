@@ -39,5 +39,5 @@ public class PengajuanIndexViewModel
     public string NamaKaryawan { get; set; } = "";
     public DateTime TglPR { get; set; }
     public string? UrgencyLevel { get; set; }
-
+    public string? Rekomendasi { get; set; }
 }

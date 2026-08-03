@@ -54,7 +54,7 @@ public class Pengajuan
     [Key] public int PR_ID { get; set; }
     public string NoPR { get; set; } = "";
     public string UserID { get; set; } = "";
-    
+
     [Required(ErrorMessage = "Pilih barang yang ingin diajukan.")]
     public int Brg_ID { get; set; }
 
@@ -78,7 +78,10 @@ public class Pengajuan
     public DateTime? TglChecker { get; set; }
     public DateTime? TglFeedback { get; set; }
     public string? UrgencyLevel { get; set; }
-    
+    public string? Rekomendasi { get; set; }     
+    public string? DecisionType { get; set; }    
+    public decimal? HargaService { get; set; }   
+
 }
 
 public class Pesanan
@@ -107,10 +110,10 @@ public class ChangePasswordViewModel
 
 public class AuditLog
 {
-    [Key] public int Id { get; set;}
+    [Key] public int Id { get; set; }
 
     public string? UserID { get; set; }
-    public string? Username { get; set;}
+    public string? Username { get; set; }
     public string Action { get; set; } = "";
     public string Entity { get; set; } = "";
     public string? EntityId { get; set; }
