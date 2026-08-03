@@ -46,6 +46,7 @@ public class Barang
     public string Nm_Vendor { get; set; } = "";
 
     public bool IsDeleted { get; set; } = false;
+    public string? Kategori { get; set; }
 }
 
 public class Pengajuan

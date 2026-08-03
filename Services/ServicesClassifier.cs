@@ -11,9 +11,13 @@ public class ClassifierClient
         _http = http;
     }
 
-    public async Task<string> ClassifyAsync(string keterangan)
+    public async Task<string> ClassifyAsync(string kategori, string keterangan)
     {
-        var response = await _http.PostAsJsonAsync("http://localhost:8000/classify", new { keterangan });
+        var response = await _http.PostAsJsonAsync("http://localhost:8000/classify", new
+        {
+            category = kategori,
+            keterangan = keterangan
+        });
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<JsonElement>();

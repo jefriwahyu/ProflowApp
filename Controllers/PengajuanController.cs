@@ -60,14 +60,19 @@ public class PengajuanController : BaseController
         {
             var barang = await _context.Barang.FindAsync(pr.Brg_ID);
 
+            // ---- klasifikasi urgensi: Kategori barang + Keterangan pengajuan ----
             try
             {
-                pr.UrgencyLevel = await _classifierClient.ClassifyAsync(pr.Keterangan ?? "");
+                pr.UrgencyLevel = await _classifierClient.ClassifyAsync(
+                    barang?.Kategori ?? "",
+                    pr.Keterangan ?? ""
+                );
             }
             catch (Exception ex)
             {
-                pr.UrgencyLevel = "Medium";
+                pr.UrgencyLevel = "Medium"; // fallback kalau microservice down
             }
+            // ----------------------------------------------------------------------
 
             _context.Pengajuan.Add(pr);
             await _context.SaveChangesAsync();
@@ -76,7 +81,7 @@ public class PengajuanController : BaseController
                 action: "CREATE_PR",
                 entity: "Pengajuan",
                 entityId: pr.PR_ID.ToString(),
-                detail: $"PR dibuat: {pr.NoPR} | Barang: {barang?.Nm_Brg} | Jumlah: {pr.Jml}"
+                detail: $"PR dibuat: {pr.NoPR} | Barang: {barang?.Nm_Brg} | Jumlah: {pr.Jml} | Urgensi: {pr.UrgencyLevel}"
             );
 
             return RedirectToAction("Index", "Pengajuan");
@@ -158,13 +163,36 @@ public class PengajuanController : BaseController
         pr.Feedback = feedback;
         pr.TglFeedback = DateTime.Now;
 
+        var barang = await _context.Barang.FindAsync(pr.Brg_ID);
+
         // Buat PO otomatis
-        var noPO = "PO" + DateTime.Now.ToString("yyyyMMdd") + "-" + pr.PR_ID;
+        // var noPO = "PO" + DateTime.Now.ToString("yyyyMMdd") + "-" + pr.PR_ID;
+        // Ambil nomor urut terakhir dari NoPO yang sudah ada, lalu tambah 1
+        var lastNoPO = await _context.Pesanan
+            .Where(p => p.NoPO != null && p.NoPO.StartsWith("TXN"))
+            .OrderByDescending(p => p.PO_ID)
+            .Select(p => p.NoPO)
+            .FirstOrDefaultAsync();
+
+        int nextNumber = 1;
+        if (!string.IsNullOrEmpty(lastNoPO) && lastNoPO.StartsWith("TXN"))
+        {
+            var numericPart = lastNoPO.Substring(3); // buang "TXN", ambil angkanya
+            if (int.TryParse(numericPart, out int lastNumber))
+            {
+                nextNumber = lastNumber + 1;
+            }
+        }
+
+        var noPO = "TXN" + nextNumber.ToString("D3"); // D3 = padding 3 digit: 1 -> "001"
+
         var pesananBaru = new Pesanan
         {
             NoPO = noPO,
             PR_ID = pr.PR_ID,
-            tgl_PO = DateTime.Now
+            tgl_PO = DateTime.Now,
+            Status = 3,
+            TotalHarga = barang?.Hrg_Est * pr.Jml
         };
 
         _context.Pesanan.Add(pesananBaru);
