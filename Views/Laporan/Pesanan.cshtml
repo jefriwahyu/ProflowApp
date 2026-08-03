@@ -135,7 +135,7 @@ else
             </div>
             <div>
                 <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Total Nilai</p>
-                <p class="text-2xl font-bold text-sky-600 leading-tight">$ @Model.GrandTotal.ToString("N0")</p>
+                <p class="text-2xl font-bold text-sky-600 leading-tight">@Model.GrandTotal.ToString("C2", new System.Globalization.CultureInfo("en-US"))</p>
             </div>
         </div>
     </div>
@@ -202,8 +202,8 @@ else
                             <td class="px-3 py-3 text-xs text-slate-600 whitespace-nowrap">@item.NamaVendor</td>
                             <td class="px-2 py-3 text-xs text-slate-500 text-center">@item.Satuan</td>
                             <td class="px-2 py-3 text-xs text-center text-slate-700">@item.Jumlah.ToString("N0")</td>
-                            <td class="px-3 py-3 text-xs text-right text-slate-600">$ @((item.HargaSatuan ?? 0).ToString("N0"))</td>
-                            <td class="px-3 py-3 text-xs text-right font-semibold text-slate-800">$ @((item.TotalHarga ?? 0).ToString("N0"))</td>
+                            <td class="px-3 py-3 text-xs text-right text-slate-600">@((item.HargaSatuan ?? 0).ToString("C2", new System.Globalization.CultureInfo("en-US")))</td>
+                            <td class="px-3 py-3 text-xs text-right font-semibold text-slate-800">@((item.TotalHarga ?? 0).ToString("C2", new System.Globalization.CultureInfo("en-US")))</td>
                         </tr>
                     }
                 </tbody>
@@ -213,7 +213,7 @@ else
                         <td colspan="7" class="px-4 py-3 text-right text-sm font-bold text-white uppercase tracking-wide">TOTAL</td>
                         <td class="px-4 py-3 text-right text-xs font-bold text-white">@totalJumlahAll.ToString("N0")</td>
                         <td class="px-4 py-3"></td>
-                        <td class="px-3 py-3 text-right text-xs font-bold text-white">$ @totalHargaAll.ToString("N0")</td>
+                        <td class="px-3 py-3 text-right text-xs font-bold text-white">@totalHargaAll.ToString("C2", new System.Globalization.CultureInfo("en-US"))</td>
                     </tr>
                 </tfoot>
             </table>
