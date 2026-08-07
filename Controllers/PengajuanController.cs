@@ -133,7 +133,7 @@ public class PengajuanController : BaseController
     // Manager approve PR — status 2 → 3
     // Sekaligus simpan feedback dan buat PO
     [HttpPost("Approve")]
-    public async Task<IActionResult> Approve(string noPR, string feedback, string decisionType, decimal? hargaService)
+    public async Task<IActionResult> Approve(string noPR, string feedback, string decisionType)
     {
         if (HttpContext.Session.GetString("Role") != "Manager")
         {
@@ -165,9 +165,11 @@ public class PengajuanController : BaseController
             return RedirectToAction("Index");
         }
 
-        if (pr.Rekomendasi == "SERVICE" && (hargaService == null || hargaService <= 0))
+        // Harga service sudah diinput checker saat kirim bukti.
+        // Manager tidak lagi input harga di sini.
+        if (pr.Rekomendasi == "SERVICE" && (pr.HargaService == null || pr.HargaService <= 0))
         {
-            TempData["Error"] = "Harga Service wajib diisi untuk pengajuan dengan rekomendasi Service.";
+            TempData["Error"] = "Harga Service belum diisi oleh checker. Minta checker melengkapi terlebih dahulu.";
             return RedirectToAction("Index");
         }
 
@@ -177,10 +179,9 @@ public class PengajuanController : BaseController
         pr.Feedback = feedback;
         pr.TglFeedback = DateTime.Now;
         pr.DecisionType = pr.Rekomendasi == "SERVICE" ? "SERVICE" : "PENGADAAN";
-        pr.HargaService = pr.Rekomendasi == "SERVICE" ? hargaService : null;
 
         decimal totalHarga = pr.Rekomendasi == "SERVICE"
-            ? hargaService!.Value
+            ? pr.HargaService!.Value
             : (barang?.Hrg_Est ?? 0) * pr.Jml;
 
         // Buat PO otomatis 
@@ -281,7 +282,8 @@ public class PengajuanController : BaseController
     string noPR,
     IFormFile fotoBukti,
     string ketChecker,
-    string rekomendasi)
+    string rekomendasi,
+    decimal? hargaService)
     {
         if (HttpContext.Session.GetString("Role") != "Checker")
         {
@@ -316,6 +318,13 @@ public class PengajuanController : BaseController
             return RedirectToAction("Index");
         }
 
+        // Harga service wajib diisi checker jika rekomendasi = Service
+        if (rekomendasi == "SERVICE" && (hargaService == null || hargaService <= 0))
+        {
+            TempData["Error"] = "Harga Service wajib diisi untuk rekomendasi Service.";
+            return RedirectToAction("Index");
+        }
+
         var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
         var extension = Path.GetExtension(fotoBukti.FileName).ToLower();
         if (!allowedExtensions.Contains(extension))
@@ -343,6 +352,10 @@ public class PengajuanController : BaseController
         pr.TglChecker = DateTime.Now;
         pr.Rekomendasi = rekomendasi;
 
+        // Simpan harga service (dari checker) jika rekomendasi Service.
+        // Untuk Ganti Baru, harga diambil dari estimasi barang saat approve.
+        pr.HargaService = rekomendasi == "SERVICE" ? hargaService : null;
+
         // Langsung ubah status ke 2 (Sudah Dicek) setelah upload
         pr.Status = 2;
 
@@ -353,9 +366,87 @@ public class PengajuanController : BaseController
             entity: "Pengajuan",
             entityId: pr.PR_ID.ToString(),
             detail: $"Bukti dikirim & status diubah ke Sudah Dicek: {noPR} | File: {fileName} | Rekomendasi: {rekomendasi}"
+                + (rekomendasi == "SERVICE" ? $" | Harga Service: {hargaService}" : "")
         );
 
         TempData["Success"] = "Bukti berhasil dikirim. Status pengajuan diubah ke Sudah Dicek.";
+        return RedirectToAction("Index");
+    }
+
+    // Checker upload bukti barang sudah diterima / sudah diservice.
+    // Dipanggil setelah PR disetujui manager (status 3).
+    // - DecisionType PENGADAAN (Ganti Baru) → status 5 (Diterima)
+    // - DecisionType SERVICE                → status 6 (Diservice)
+    [HttpPost("KirimBuktiTerima")]
+    public async Task<IActionResult> KirimBuktiTerima(string noPR, IFormFile fotoTerima)
+    {
+        if (HttpContext.Session.GetString("Role") != "Checker")
+        {
+            TempData["Error"] = "Anda tidak memiliki akses.";
+            return RedirectToAction("Index");
+        }
+
+        var pr = await _context.Pengajuan
+            .FirstOrDefaultAsync(p => p.NoPR == noPR);
+
+        // Hanya bisa upload bukti terima kalau PR sudah disetujui (status 3)
+        if (pr == null || pr.Status != 3)
+        {
+            TempData["Error"] = "PR tidak ditemukan atau belum disetujui.";
+            return RedirectToAction("Index");
+        }
+
+        if (fotoTerima == null || fotoTerima.Length == 0)
+        {
+            TempData["Error"] = "Foto bukti wajib diupload.";
+            return RedirectToAction("Index");
+        }
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+        var extension = Path.GetExtension(fotoTerima.FileName).ToLower();
+        if (!allowedExtensions.Contains(extension))
+        {
+            TempData["Error"] = "File harus berformat JPG atau PNG.";
+            return RedirectToAction("Index");
+        }
+
+        if (fotoTerima.Length > 5 * 1024 * 1024)
+        {
+            TempData["Error"] = "Ukuran file maksimal 5MB.";
+            return RedirectToAction("Index");
+        }
+
+        var safeNoPR = string.Concat(noPR.Split(Path.GetInvalidFileNameChars()));
+        var fileName = $"{safeNoPR}-terima{extension}";
+        var uploadDir = Path.Combine(_env.WebRootPath, "uploads", "bukti");
+        var filePath = Path.Combine(uploadDir, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+            await fotoTerima.CopyToAsync(stream);
+
+        pr.FotoTerima = $"/uploads/bukti/{fileName}";
+        pr.TglTerima = DateTime.Now;
+
+        // Status akhir tergantung jenis keputusan
+        bool isService = pr.DecisionType == "SERVICE";
+        pr.Status = isService ? 6 : 5; // 6 = Diservice, 5 = Diterima
+
+        // Tandai PO terkait sebagai selesai
+        var pesanan = await _context.Pesanan
+            .FirstOrDefaultAsync(p => p.PR_ID == pr.PR_ID);
+        if (pesanan != null) pesanan.Status = 2; // Selesai
+
+        await _context.SaveChangesAsync();
+
+        var statusText = isService ? "Diservice" : "Diterima";
+        await _auditService.LogAsync(
+            action: "KIRIM_BUKTI_TERIMA",
+            entity: "Pengajuan",
+            entityId: pr.PR_ID.ToString(),
+            detail: $"Bukti barang {statusText}: {noPR} | File: {fileName}"
+        );
+
+        TempData["Success"] = $"Bukti dikirim. Status pengajuan diubah ke {statusText}.";
         return RedirectToAction("Index");
     }
 
@@ -366,7 +457,8 @@ public class PengajuanController : BaseController
     string? search = null,
     string? tanggalDari = null,
     string? tanggalSampai = null,
-    int? status = null)
+    int? status = null,
+    string? urgency = null)
     {
         // Pastikan page selalu minimal 1 — mencegah OFFSET negatif
         if (page < 1) page = 1;
@@ -381,7 +473,7 @@ public class PengajuanController : BaseController
 
         var query = from pr in _context.Pengajuan
                     where role == "Manager" ||
-                          (role == "Checker" && pr.Status == 1) ||
+                          (role == "Checker" && (pr.Status == 1 || pr.Status == 2 || pr.Status == 3 || pr.Status == 5 || pr.Status == 6)) ||
                           pr.UserID == userID
 
                     join brg in _context.Barang on pr.Brg_ID equals brg.Brg_ID
@@ -397,6 +489,7 @@ public class PengajuanController : BaseController
                     where tglDari == null || pr.Tgl_Req >= tglDari
                     where tglSampai == null || pr.Tgl_Req <= tglSampai.Value.Date.AddDays(1).AddSeconds(-1)
                     where status == null || pr.Status == status
+                    where string.IsNullOrEmpty(urgency) || pr.UrgencyLevel == urgency
 
                     select new PengajuanIndexViewModel
                     {
@@ -415,7 +508,11 @@ public class PengajuanController : BaseController
                         Feedback = pr.Feedback,
                         TglFeedback = pr.TglFeedback,
                         UrgencyLevel = pr.UrgencyLevel,
-                        Rekomendasi = pr.Rekomendasi
+                        Rekomendasi = pr.Rekomendasi,
+                        DecisionType = pr.DecisionType,
+                        HargaService = pr.HargaService,
+                        FotoTerima = pr.FotoTerima,
+                        TglTerima = pr.TglTerima
                     };
 
         var totalData = await query.CountAsync();
@@ -425,14 +522,11 @@ public class PengajuanController : BaseController
         if (page > totalPages && totalPages > 0) page = totalPages;
 
 
-        var urgencyOrder = new Dictionary<string, int> { ["High"] = 1, ["Medium"] = 2, ["Low"] = 3 };
-
-        var dataPaginated = (await query.ToListAsync())
-            .OrderBy(x => urgencyOrder.GetValueOrDefault(x.UrgencyLevel ?? "", 4))
-            .ThenByDescending(x => x.Tanggal)
+        var dataPaginated = await query
+            .OrderByDescending(x => x.Tanggal)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToList();
+            .ToListAsync();
 
         ViewBag.CurrentPage = page;
         ViewBag.TotalPages = totalPages;
@@ -441,6 +535,7 @@ public class PengajuanController : BaseController
         ViewBag.FilterTanggalDari = tanggalDari;
         ViewBag.FilterTanggalSampai = tanggalSampai;
         ViewBag.FilterStatus = status;
+        ViewBag.FilterUrgency = urgency;
 
         return View(dataPaginated);
     }

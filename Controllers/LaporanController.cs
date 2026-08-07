@@ -28,7 +28,7 @@ namespace ProFlowApp.Controllers
         // Mencegah attacker akses report lain di SSRS server
         private static readonly HashSet<string> ALLOWED_REPORTS = new()
         {
-            "/ProFlow/report_pr3",
+            "/ProFlow/report_pr",
             "/ProFlow/report_po"
         };
 
@@ -133,7 +133,7 @@ namespace ProFlowApp.Controllers
                     (tanggalSampai == null || x.p.Tgl_Req <= tanggalSampai.Value.Date.AddDays(1).AddSeconds(-1)) &&
                     (status == null ||
                         (status == 0 && new[] { 0, 1, 2 }.Contains(x.p.Status ?? -1)) ||
-                        (status == 3 && x.p.Status == 3) ||
+                        (status == 3 && new[] { 3, 5, 6 }.Contains(x.p.Status ?? -1)) ||
                         (status == 4 && x.p.Status == 4)) &&
                     (string.IsNullOrEmpty(namaKaryawan) || x.u.Nama.Contains(namaKaryawan)))
                 .OrderByDescending(x => x.p.Tgl_Req)
@@ -157,7 +157,7 @@ namespace ProFlowApp.Controllers
 
             vm.TotalPR = vm.Items.Count;
             vm.TotalPending = vm.Items.Count(x => x.Status.HasValue && new[] { 0, 1, 2 }.Contains(x.Status.Value));
-            vm.TotalDisetujui = vm.Items.Count(x => x.Status.HasValue && x.Status.Value == 3);
+            vm.TotalDisetujui = vm.Items.Count(x => x.Status.HasValue && new[] { 3, 5, 6 }.Contains(x.Status.Value));
             vm.TotalDitolak = vm.Items.Count(x => x.Status.HasValue && x.Status.Value == 4);
             vm.GrandTotal = vm.Items.Sum(x => x.TotalHarga ?? 0);
 
@@ -168,7 +168,7 @@ namespace ProFlowApp.Controllers
                     (tanggalSampai == null || x.p.Tgl_Req <= tanggalSampai.Value.Date.AddDays(1).AddSeconds(-1)) &&
                     (status == null ||
                         (status == 0 && new[] { 0, 1, 2 }.Contains(x.p.Status ?? -1)) ||
-                        (status == 3 && x.p.Status == 3) ||
+                        (status == 3 && new[] { 3, 5, 6 }.Contains(x.p.Status ?? -1)) ||
                         (status == 4 && x.p.Status == 4)) &&
                     (string.IsNullOrEmpty(namaKaryawan) || x.u.Nama.Contains(namaKaryawan)))
                 .Select(x => new { x.p.Tgl_Req, x.p.Status })
@@ -186,7 +186,7 @@ namespace ProFlowApp.Controllers
                         MingguKe = 0,
                         JumlahPR = g.Count(),
                         JumlahPending = g.Count(x => x.Status.HasValue && new[] { 0, 1, 2 }.Contains(x.Status.Value)),
-                        JumlahDisetujui = g.Count(x => x.Status.HasValue && x.Status.Value == 3),
+                        JumlahDisetujui = g.Count(x => x.Status.HasValue && new[] { 3, 5, 6 }.Contains(x.Status.Value)),
                         JumlahDitolak = g.Count(x => x.Status.HasValue && x.Status.Value == 4)
                     })
                     .OrderBy(x => x.Tahun).ThenBy(x => x.Bulan)
@@ -204,7 +204,7 @@ namespace ProFlowApp.Controllers
                         MingguKe = g.Key.Week,
                         JumlahPR = g.Count(),
                         JumlahPending = g.Count(x => x.Status.HasValue && new[] { 0, 1, 2 }.Contains(x.Status.Value)),
-                        JumlahDisetujui = g.Count(x => x.Status.HasValue && x.Status.Value == 3),
+                        JumlahDisetujui = g.Count(x => x.Status.HasValue && new[] { 3, 5, 6 }.Contains(x.Status.Value)),
                         JumlahDitolak = g.Count(x => x.Status.HasValue && x.Status.Value == 4)
                     })
                     .OrderBy(x => x.Tahun).ThenBy(x => x.Bulan).ThenBy(x => x.MingguKe)
@@ -224,7 +224,7 @@ namespace ProFlowApp.Controllers
 
             // Validasi semua parameter sebelum dipakai
             // Kalau ada yang tidak valid → tolak request
-            var reportPath = "/ProFlow/report_pr3";
+            var reportPath = "/ProFlow/report_pr";
             var validationError = ValidateSsrsParams(
                 format, tanggalDari, tanggalSampai, status, reportPath);
 
@@ -259,10 +259,6 @@ namespace ProFlowApp.Controllers
                 // NamaKaryawan di-escape untuk mencegah injection
                 if (!string.IsNullOrEmpty(namaKaryawan))
                     url += $"&NamaKaryawan={Uri.EscapeDataString(namaKaryawan)}";
-
-                // TipeGrafik — hanya 2 nilai valid, hardcode whitelist
-                var safeTipeGrafik = tipeGrafik == "bulan" ? "bulan" : "tahun";
-                url += $"&TipeGrafik={safeTipeGrafik}";
 
                 using var client = CreateSsrsClient();
                 var bytes = await client.GetByteArrayAsync(url);
@@ -422,14 +418,8 @@ namespace ProFlowApp.Controllers
                 if (!string.IsNullOrEmpty(tanggalSampai))
                     url += $"&TanggalSampai={tanggalSampai}T23:59:59";
 
-                if (!string.IsNullOrEmpty(status))
-                    url += $"&Status={status}";
-
                 if (!string.IsNullOrEmpty(namaKaryawan))
                     url += $"&NamaKaryawan={Uri.EscapeDataString(namaKaryawan)}";
-
-                var safeTipeGrafik = tipeGrafik == "bulan" ? "bulan" : "tahun";
-                url += $"&TipeGrafik={safeTipeGrafik}";
 
                 using var client = CreateSsrsClient();
                 var bytes = await client.GetByteArrayAsync(url);

@@ -127,11 +127,43 @@
                                     <option value="2" selected="@(ViewBag.FilterStatus?.ToString() == "2")">Sudah Dicek</option>
                                     <option value="3" selected="@(ViewBag.FilterStatus?.ToString() == "3")">Disetujui</option>
                                     <option value="4" selected="@(ViewBag.FilterStatus?.ToString() == "4")">Ditolak</option>
+                                    <option value="5" selected="@(ViewBag.FilterStatus?.ToString() == "5")">Diterima</option>
+                                    <option value="6" selected="@(ViewBag.FilterStatus?.ToString() == "6")">Diservice</option>
+                                </select>
+                            </div>
+                        }
+                        else if (role == "Checker")
+                        {
+                            <div>
+                                <label
+                                class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Status</label>
+                                <select name="status"
+                                        class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all">
+                                    <option value="">Semua Status</option>
+                                    <option value="1" selected="@(ViewBag.FilterStatus?.ToString() == "1")">Perlu Dicek</option>
+                                    <option value="2" selected="@(ViewBag.FilterStatus?.ToString() == "2")">Sudah Dicek</option>
+                                    <option value="3" selected="@(ViewBag.FilterStatus?.ToString() == "3")">Disetujui</option>
+                                    <option value="5" selected="@(ViewBag.FilterStatus?.ToString() == "5")">Diterima</option>
+                                    <option value="6" selected="@(ViewBag.FilterStatus?.ToString() == "6")">Diservice</option>
+                                </select>
+                            </div>
+                        }
+                        <!-- Urgensi -->
+                        @if (role != "Karyawan")
+                        {
+                            <div>
+                                <label
+                                class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wide">Urgensi</label>
+                                <select name="urgency"
+                                        class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 transition-all">
+                                    <option value="">Semua Urgensi</option>
+                                    <option value="High" selected="@(ViewBag.FilterUrgency?.ToString() == "High")">High</option>
+                                    <option value="Medium" selected="@(ViewBag.FilterUrgency?.ToString() == "Medium")">Medium</option>
+                                    <option value="Low" selected="@(ViewBag.FilterUrgency?.ToString() == "Low")">Low</option>
                                 </select>
                             </div>
                         }
                     </div>
-                    <!-- Tombol -->
                     <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
                         <a asp-action="Index"
                            class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-700 border border-slate-200 hover:border-slate-300 px-3.5 py-2 rounded-lg transition-all">
@@ -175,9 +207,12 @@
                             }
                             <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Nama
                                 Barang</th>
-                                <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">
-                                    Urgensi
-                                </th>
+                                @if (role != "Karyawan")
+                                {
+                                    <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">
+                                        Urgensi
+                                    </th>
+                                }
                                 <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">
                                     Detail
                                 </th>
@@ -187,12 +222,9 @@
                                 <th class="text-left text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">
                                     Tanggal
                                 </th>
-                                @if (role != "Checker")
-                                {
-                                    <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">
-                                        Status
-                                    </th>
-                                }
+                                <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">
+                                    Status
+                                </th>
                                 @if (role == "Manager")
                                 {
                                     <th class="text-center text-xs font-semibold text-slate-300 uppercase tracking-wider px-5 py-4">Aksi
@@ -256,6 +288,8 @@
                                         <!-- Nama Barang -->
                                         <td class="px-5 py-4 font-medium text-slate-800">@item.NamaBarang</td>
                                         <!-- Urgensi -->
+                                        @if (role != "Karyawan")
+                                        {
                                         <td class="px-5 py-4 text-center">
                                             @switch (item.UrgencyLevel)
                                             {
@@ -282,6 +316,7 @@
                                                     break;
                                             }
                                         </td>
+                                        }
                                         <!-- Detail (tombol buka modal chat-like) -->
                                         <td class="px-5 py-4 text-center">
                                             <button type="button" onclick="showDetailModal(this)" data-nopr="@item.NoPR"
@@ -293,6 +328,11 @@
                                                     data-tglfeedback="@(item.TglFeedback?.ToString("dd/MM/yyyy HH:mm") ?? "")"
                                                     data-namakaryawan="@Html.Encode(item.NamaKaryawan)"
                                                     data-tglpr="@item.TglPR.ToString("dd/MM/yyyy HH:mm")" data-status="@(item.Status ?? 0)"
+                                                    data-decisiontype="@Html.Encode(item.DecisionType ?? "")"
+                                                    data-rekomendasi="@Html.Encode(item.Rekomendasi ?? "")"
+                                                    data-hargaservice="@(item.HargaService?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "")"
+                                                    data-fototerima="@Html.Encode(item.FotoTerima ?? "")"
+                                                    data-tglterima="@(item.TglTerima?.ToString("dd/MM/yyyy HH:mm") ?? "")"
                                                     class="inline-flex items-center gap-1 text-xs font-medium text-sky-600 hover:text-sky-700 border border-sky-200 hover:bg-sky-50 px-2.5 py-1 rounded-lg transition-all duration-150">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
                                                      viewBox="0 0 24 24">
@@ -311,10 +351,8 @@
                                         <!-- Tanggal -->
                                         <td class="px-5 py-4 text-slate-500 text-xs">@item.Tanggal.ToString("dd/MM/yyyy")</td>
                                         <!-- Status Badge -->
-                                        @if (role != "Checker")
-                                        {
-                                            <td class="px-5 py-4 text-center">
-                                                @switch (item.Status)
+                                        <td class="px-5 py-4 text-center">
+                                            @switch (item.Status)
                                                 {
                                                     case 0:
                                                         <span
@@ -346,6 +384,18 @@
                                                             <span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span>Ditolak
                                                         </span>
                                                         break;
+                                                    case 5:
+                                                        <span
+                                                            class="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                                            <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full"></span>Diterima
+                                                        </span>
+                                                        break;
+                                                    case 6:
+                                                        <span
+                                                            class="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                                            <span class="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>Diservice
+                                                        </span>
+                                                        break;
                                                     default:
                                                         <span
                                                             class="inline-flex items-center gap-1 bg-slate-50 text-slate-600 border border-slate-200 text-xs font-semibold px-2.5 py-1 rounded-full">
@@ -353,8 +403,7 @@
                                                         </span>
                                                         break;
                                                 }
-                                            </td>
-                                        }
+                                        </td>
                                         <!-- Aksi -->
                                         @if (role == "Manager")
                                         {
@@ -380,7 +429,7 @@
                                                         else if (item.Status == 2)
                                                         {
                                                             <!-- Manager: Approve atau Tolak setelah checker cek -->
-                                                            <button type="button" onclick="showApproveModal('@item.NoPR', '@item.Rekomendasi')"
+                                                            <button type="button" onclick="showApproveModal('@item.NoPR', '@item.Rekomendasi', '@(item.HargaService?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "")')"
                                                                     class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 hover:bg-emerald-50 px-3 py-1.5 rounded-lg transition-all">
                                                                 Setujui
                                                             </button>
@@ -424,7 +473,7 @@
                     <div class="flex items-center gap-2">
                         <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-search="@ViewBag.FilterSearch"
                            asp-route-tanggalDari="@ViewBag.FilterTanggalDari"
-                           asp-route-tanggalSampai="@ViewBag.FilterTanggalSampai" asp-route-status="@ViewBag.FilterStatus"
+                           asp-route-tanggalSampai="@ViewBag.FilterTanggalSampai" asp-route-status="@ViewBag.FilterStatus" asp-route-urgency="@ViewBag.FilterUrgency"
                            class="@(ViewBag.CurrentPage <= 1 ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -433,7 +482,7 @@
                         </a>
                         <a asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-search="@ViewBag.FilterSearch"
                            asp-route-tanggalDari="@ViewBag.FilterTanggalDari"
-                           asp-route-tanggalSampai="@ViewBag.FilterTanggalSampai" asp-route-status="@ViewBag.FilterStatus"
+                           asp-route-tanggalSampai="@ViewBag.FilterTanggalSampai" asp-route-status="@ViewBag.FilterStatus" asp-route-urgency="@ViewBag.FilterUrgency"
                            class="@(ViewBag.CurrentPage >= ViewBag.TotalPages ? "pointer-events-none opacity-30" : "hover:bg-slate-200") text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
                             Next
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -505,16 +554,50 @@
                                                 <label
                                                     class="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium border border-slate-200 rounded-lg px-3 py-2 cursor-pointer has-[:checked]:bg-amber-50 has-[:checked]:border-amber-300 has-[:checked]:text-amber-700">
                                                     <input type="radio" name="rekomendasi" value="SERVICE" required
-                                                           class="accent-amber-500" />
+                                                           onchange="toggleHargaService()" class="accent-amber-500" />
                                                     Service
                                                 </label>
                                                 <label
                                                     class="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium border border-slate-200 rounded-lg px-3 py-2 cursor-pointer has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300 has-[:checked]:text-blue-700">
                                                     <input type="radio" name="rekomendasi" value="GANTI_BARU" required
-                                                           class="accent-blue-500" />
+                                                           onchange="toggleHargaService()" class="accent-blue-500" />
                                                     Ganti Baru
                                                 </label>
                                             </div>
+                                        </div>
+                                        <!-- Harga Service — hanya muncul kalau Rekomendasi = Service -->
+                                        <div id="hargaServiceCheckerWrapper" class="hidden">
+                                            <label class="block text-xs font-medium text-slate-600 mb-1">
+                                                Harga Service <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="number" name="hargaService" id="inputHargaServiceChecker" step="0.01"
+                                                   min="0" placeholder="Masukkan harga dari pihak service..."
+                                                   class="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-sky-400" />
+                                        </div>
+                                        <button type="submit"
+                                                class="w-full bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold py-2.5 rounded-lg transition-colors">
+                                            Kirim Bukti
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Form Kirim Bukti Terima/Service (Checker only, status = 3, belum upload) -->
+                        <div id="formTerimaWrapper" class="hidden px-6 pb-4">
+                            <div class="border-t border-slate-100 pt-4">
+                                <p id="terimaTitle" class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                                    Barang Diterima</p>
+                                <form asp-action="KirimBuktiTerima" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" id="noPRTerima" name="noPR" />
+                                    <div class="space-y-3">
+                                        <div>
+                                            <label id="terimaLabel" class="block text-xs font-medium text-slate-600 mb-1">
+                                                Foto Bukti Barang Diterima <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="file" name="fotoTerima" accept=".jpg,.jpeg,.png" required
+                                                   class="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-sky-400" />
+                                            <p class="text-xs text-slate-400 mt-1">Format: JPG, PNG. Maks: 5MB</p>
                                         </div>
                                         <button type="submit"
                                                 class="w-full bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold py-2.5 rounded-lg transition-colors">
@@ -605,14 +688,13 @@
                                                   class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400 resize-none"></textarea>
                                     </div>
 
-                                    <!-- Harga Service — hanya muncul kalau Rekomendasi = SERVICE -->
+                                    <!-- Harga Service — read-only, sudah diinput checker (muncul kalau Rekomendasi = SERVICE) -->
                                     <div id="hargaServiceWrapper" class="hidden">
                                         <label class="block text-xs font-medium text-slate-600 mb-1">
-                                            Harga Service <span class="text-red-500">*</span>
+                                            Harga Service (dari Checker)
                                         </label>
-                                        <input type="number" name="hargaService" id="inputHargaService" step="0.01" min="0"
-                                               placeholder="Masukkan harga dari pihak service..."
-                                               class="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-400" />
+                                        <div id="hargaServiceDisplay"
+                                             class="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 font-semibold"></div>
                                     </div>
 
                                     <button type="submit"
@@ -675,24 +757,39 @@
                 <script>
                     const userRole = '@role';
 
-                    // Buka modal approve — isi noPR
+                    // Toggle input Harga Service di form Kirim Bukti checker
+                    function toggleHargaService() {
+                        const selected = document.querySelector('#formBuktiWrapper input[name="rekomendasi"]:checked');
+                        const wrapper = document.getElementById('hargaServiceCheckerWrapper');
+                        const input = document.getElementById('inputHargaServiceChecker');
+                        if (selected && selected.value === 'SERVICE') {
+                            wrapper.classList.remove('hidden');
+                            input.required = true;
+                        } else {
+                            wrapper.classList.add('hidden');
+                            input.required = false;
+                            input.value = '';
+                        }
+                    }
+
                     // Buka modal approve — isi noPR, tampilkan form sesuai Rekomendasi checker
-                    function showApproveModal(noPR, rekomendasi) {
+                    function showApproveModal(noPR, rekomendasi, hargaService) {
                         document.getElementById('noPRApprove').value = noPR;
 
                         const hargaWrapper = document.getElementById('hargaServiceWrapper');
-                        const inputHarga = document.getElementById('inputHargaService');
+                        const hargaDisplay = document.getElementById('hargaServiceDisplay');
                         const infoBox = document.getElementById('rekomendasiInfo');
 
                         if (rekomendasi === 'SERVICE') {
                             hargaWrapper.classList.remove('hidden');
-                            inputHarga.required = true;
+                            const nominal = hargaService && !isNaN(parseFloat(hargaService))
+                                ? 'Rp ' + parseFloat(hargaService).toLocaleString('id-ID')
+                                : 'Belum diisi checker';
+                            hargaDisplay.textContent = nominal;
                             infoBox.textContent = 'Rekomendasi Checker: Service';
                             infoBox.className = 'text-xs font-medium px-3 py-2 rounded-lg bg-amber-50 text-amber-700 border border-amber-200';
                         } else {
                             hargaWrapper.classList.add('hidden');
-                            inputHarga.required = false;
-                            inputHarga.value = '';
                             infoBox.textContent = 'Rekomendasi Checker: Ganti Baru';
                             infoBox.className = 'text-xs font-medium px-3 py-2 rounded-lg bg-blue-50 text-blue-700 border border-blue-200';
                         }
@@ -726,7 +823,11 @@
                             tglFeedback: btn.dataset.tglfeedback,
                             namaKaryawan: btn.dataset.namakaryawan,
                             tglPR: btn.dataset.tglpr,
-                            status: parseInt(btn.dataset.status)
+                            status: parseInt(btn.dataset.status),
+                            decisionType: btn.dataset.decisiontype,
+                            rekomendasi: btn.dataset.rekomendasi,
+                            fotoTerima: btn.dataset.fototerima,
+                            tglTerima: btn.dataset.tglterima
                         };
 
                         const chat = document.getElementById('chatContainer');
@@ -782,33 +883,98 @@
 
                         // ── Bubble 3: Feedback Manager ──
                         if (data.feedback) {
-                            const isApproved = data.status === 3;
+                            const isRejected = data.status === 4;
+                            const isServiceDecision = data.decisionType === 'SERVICE';
+
+                            // Skema warna & ikon:
+                            //  - Ditolak            → merah + ikon X
+                            //  - Disetujui (Service)→ kuning (amber) + ikon service
+                            //  - Disetujui (lainnya)→ hijau (emerald) + ikon centang
+                            let dotBg, textColor, boxColor, iconPath;
+                            if (isRejected) {
+                                dotBg = 'bg-red-100'; textColor = 'text-red-500';
+                                boxColor = 'bg-red-50 border-red-100';
+                                iconPath = '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>';
+                            } else if (isServiceDecision) {
+                                dotBg = 'bg-amber-100'; textColor = 'text-amber-600';
+                                boxColor = 'bg-amber-50 border-amber-100';
+                                iconPath = '<path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085"/>';
+                            } else {
+                                dotBg = 'bg-emerald-100'; textColor = 'text-emerald-500';
+                                boxColor = 'bg-emerald-50 border-emerald-100';
+                                iconPath = '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+                            }
+                            const labelColor = isRejected ? 'text-red-500' : (isServiceDecision ? 'text-amber-600' : 'text-emerald-600');
+                            const msgTextColor = isRejected ? 'text-red-800' : (isServiceDecision ? 'text-amber-800' : 'text-emerald-800');
+
                             chat.innerHTML += `
-                                                                                                                                <div>
-                                                                                                                                    <div class="flex items-center gap-2 mb-1.5">
-                                                                                                                                        <div class="w-6 h-6 ${isApproved ? 'bg-emerald-100' : 'bg-red-100'} rounded-full flex items-center justify-center">
-                                                                                                                                            <svg class="w-3 h-3 ${isApproved ? 'text-emerald-500' : 'text-red-500'}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                                                                                                                ${isApproved
-                                    ? '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
-                                    : '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>'}
-                                                                                                                                            </svg>
-                                                                                                                                        </div>
-                                                                                                                                        <span class="text-xs font-semibold ${isApproved ? 'text-emerald-600' : 'text-red-500'}">Manager</span>
-                                                                                                                                        <span class="text-xs text-slate-400">${data.tglFeedback}</span>
-                                                                                                                                    </div>
-                                                                                                                                    <div class="${isApproved ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'} border rounded-xl rounded-tl-none px-4 py-3">
-                                                                                                                                        <p class="text-sm ${isApproved ? 'text-emerald-800' : 'text-red-800'} leading-relaxed">${data.feedback}</p>
-                                                                                                                                    </div>
-                                                                                                                                </div>`;
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <div class="w-6 h-6 ${dotBg} rounded-full flex items-center justify-center">
+                                            <svg class="w-3 h-3 ${textColor}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                ${iconPath}
+                                            </svg>
+                                        </div>
+                                        <span class="text-xs font-semibold ${labelColor}">Manager</span>
+                                        <span class="text-xs text-slate-400">${data.tglFeedback}</span>
+                                    </div>
+                                    <div class="${boxColor} border rounded-xl rounded-tl-none px-4 py-3">
+                                        <p class="text-sm ${msgTextColor} leading-relaxed">${data.feedback}</p>
+                                    </div>
+                                </div>`;
+                        }
+
+                        // ── Bubble 4: Bukti Barang Diterima / Sudah di Service ──
+                        // Selalu tampil paling bawah (setelah feedback manager).
+                        if (data.fotoTerima) {
+                            const isService = data.decisionType === 'SERVICE';
+                            // Service → kuning (amber); Diterima → ungu (indigo)
+                            const terimaText = isService ? 'Barang Sudah di Service' : 'Barang Diterima';
+                            const dotBg   = isService ? 'bg-amber-100' : 'bg-indigo-100';
+                            const iconClr = isService ? 'text-amber-500' : 'text-indigo-500';
+                            const txtClr  = isService ? 'text-amber-600' : 'text-indigo-600';
+                            chat.innerHTML += `
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <div class="w-6 h-6 ${dotBg} rounded-full flex items-center justify-center">
+                                            <svg class="w-3 h-3 ${iconClr}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                                            </svg>
+                                        </div>
+                                        <span class="text-xs font-semibold ${txtClr}">${terimaText}</span>
+                                        <span class="text-xs text-slate-400">${data.tglTerima}</span>
+                                    </div>
+                                    <div class="mb-1">
+                                        <img src="${data.fotoTerima}" alt="${terimaText}"
+                                             class="rounded-xl max-h-48 object-cover border border-slate-200 cursor-pointer"
+                                             onclick="window.open('${data.fotoTerima}', '_blank')"/>
+                                        <p class="text-xs text-slate-400 mt-1">Klik foto untuk perbesar</p>
+                                    </div>
+                                </div>`;
                         }
 
                         // ── Form Upload Bukti (Checker, status = 1, belum upload) ──
                         const formBukti = document.getElementById('formBuktiWrapper');
                         if (userRole === 'Checker' && data.status === 1 && !data.fotoBukti) {
                             document.getElementById('noPRBukti').value = data.noPR;
+                            toggleHargaService();
                             formBukti.classList.remove('hidden');
                         } else {
                             formBukti.classList.add('hidden');
+                        }
+
+                        // ── Form Upload Bukti Terima/Service (Checker, status = 3, belum upload) ──
+                        const formTerima = document.getElementById('formTerimaWrapper');
+                        if (userRole === 'Checker' && data.status === 3 && !data.fotoTerima) {
+                            const isService = data.decisionType === 'SERVICE';
+                            const terimaText = isService ? 'Barang Sudah di Service' : 'Barang Diterima';
+                            document.getElementById('noPRTerima').value = data.noPR;
+                            document.getElementById('terimaTitle').textContent = terimaText;
+                            document.getElementById('terimaLabel').innerHTML =
+                                'Foto Bukti ' + terimaText + ' <span class="text-red-500">*</span>';
+                            formTerima.classList.remove('hidden');
+                        } else {
+                            formTerima.classList.add('hidden');
                         }
 
                         document.getElementById('detailModal').classList.remove('hidden');

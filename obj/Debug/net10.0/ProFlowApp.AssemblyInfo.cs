@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProFlowApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c3164b3026041c100345146511b879d18f35abbe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec6deb0e358a11d8ace6aefd8b204b00fe1f0f0e")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProFlowApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProFlowApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

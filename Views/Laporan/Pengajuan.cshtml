@@ -291,6 +291,16 @@ pageSize).Take(pageSize).ToList() : new List<ProFlowApp.ViewModels.LaporanPRItem
                                                                     <span
                                                                     class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Disetujui</span>
                                                                 }
+                                                                else if (item.Status == 5)
+                                                                {
+                                                                    <span
+                                                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">Diterima</span>
+                                                                }
+                                                                else if (item.Status == 6)
+                                                                {
+                                                                    <span
+                                                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">Diservice</span>
+                                                                }
                                                                 else if (item.Status == 4)
                                                                 {
                                                                     <span

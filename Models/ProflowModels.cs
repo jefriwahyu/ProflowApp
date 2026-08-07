@@ -78,10 +78,13 @@ public class Pengajuan
     public DateTime? TglChecker { get; set; }
     public DateTime? TglFeedback { get; set; }
     public string? UrgencyLevel { get; set; }
-    public string? Rekomendasi { get; set; }     
-    public string? DecisionType { get; set; }    
-    public decimal? HargaService { get; set; }   
+    public string? Rekomendasi { get; set; }
+    public string? DecisionType { get; set; }
+    public decimal? HargaService { get; set; }
 
+    // Bukti barang sudah diterima / sudah diservice (diupload checker setelah PR disetujui)
+    public string? FotoTerima { get; set; }
+    public DateTime? TglTerima { get; set; }
 }
 
 public class Pesanan

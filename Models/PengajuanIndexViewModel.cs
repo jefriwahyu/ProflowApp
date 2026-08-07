@@ -7,7 +7,7 @@ public class PengajuanIndexViewModel
     public int Jumlah { get; set; }
     public int? Status { get; set; }
 
-    // Update StatusLabel — dari 3 status menjadi 5 status
+    // Update StatusLabel — dari 3 status menjadi 7 status
     public string StatusLabel => Status switch
     {
         0 => "Pending",
@@ -15,6 +15,8 @@ public class PengajuanIndexViewModel
         2 => "Sudah Dicek",
         3 => "Disetujui",
         4 => "Ditolak",
+        5 => "Diterima",
+        6 => "Diservice",
         _ => "Belum Ditentukan"
     };
 
@@ -40,4 +42,12 @@ public class PengajuanIndexViewModel
     public DateTime TglPR { get; set; }
     public string? UrgencyLevel { get; set; }
     public string? Rekomendasi { get; set; }
+
+    // Keputusan (SERVICE / PENGADAAN) + harga service yang diinput checker
+    public string? DecisionType { get; set; }
+    public decimal? HargaService { get; set; }
+
+    // Bukti barang diterima / diservice
+    public string? FotoTerima { get; set; }
+    public DateTime? TglTerima { get; set; }
 }
